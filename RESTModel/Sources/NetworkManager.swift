@@ -8,6 +8,11 @@
 
 import Foundation
 
+public enum Result<T: ResourceRepresentable> {
+    case success (T)
+    case error (Error)
+}
+
 fileprivate enum JSONResult {
     case success (JSON)
     case error (Error)
@@ -15,13 +20,44 @@ fileprivate enum JSONResult {
 
 public enum NetworkManagerError: Error {
     case noURLForOperation
-    case incorrectJSON
     case noData
+    case responseStatus (status: Int)
     case failedRequest (cause:Error)
+    case incorrectJSON
     case unknown (Error)
 }
 
 public final class NetworkManager<T:ResourceRepresentable> {
+
+    public func retrieve(identifier: Int, callback: @escaping (Result<T>)-> Void) {
+
+        let path = T.resourceInformation.path(forOperation: .get, value: identifier)
+
+        guard let url = URL(string: path) else {
+
+            callback( Result.error(NetworkManagerError.noURLForOperation) )
+            return
+        }
+
+        makeHTTPGetRequest(url: url) { (getResult) in
+
+            switch getResult {
+            case .success(let json):
+
+                print("[⚠️] json: \(json)")
+
+                guard let model = T(data: json) else {
+                    callback( Result.error(NetworkManagerError.incorrectJSON) )
+                    return
+                }
+                callback( Result.success(model) )
+
+            case .error(let err):
+
+                callback( Result.error(err) )
+            }
+        }
+    }
 
     public func retrieve(callback: @escaping ([T], Error?) -> Void) {
 
@@ -70,6 +106,18 @@ extension NetworkManager {
 
             if let error = error {
                 completion( .error(NetworkManagerError.failedRequest(cause: error)) )
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                200 ... 299 ~= httpResponse.statusCode else
+            {
+                let status = (response as! HTTPURLResponse).statusCode
+                completion(
+                    .error(
+                        NetworkManagerError.responseStatus(status: status)
+                    )
+                )
                 return
             }
 

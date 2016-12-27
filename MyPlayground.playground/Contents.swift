@@ -9,23 +9,24 @@ struct BookResource: RESTResource {
     static let root = "http://localhost:8080/"
 
     func path(forOperation operation: RESTOperation) -> String {
+        return path(forOperation: operation, value: nil)
+    }
+
+    func path(forOperation operation: RESTOperation, value: Int? = nil) -> String {
 
         switch operation {
         case .create:
-            break
-        case .delete:
-            break
-        case .get:
-            break
+            return BookResource.root + "book"
         case .getAll:
             return BookResource.root + "books"
+        case .delete:
+            fallthrough
+        case .get:
+            fallthrough
         case .update:
-            break
+            return BookResource.root + "books/\(value!)"
         }
-
-        return ""
     }
-
 }
 
 struct Book: ResourceRepresentable {
@@ -39,6 +40,13 @@ struct Book: ResourceRepresentable {
     let author:String
     let isbn: String
 
+    init(id id_:Int, title title_:String, author author_:String, isbn isbn_:String) {
+        id = id_
+        title = title_
+        author = author_
+        isbn = isbn_
+    }
+
     init?(data: JSON) {
         id = data.dictionary?["id"] as? Int ?? 0
         title = data.dictionary?["title"] as? String ?? ""
@@ -50,10 +58,20 @@ struct Book: ResourceRepresentable {
 Book.manager.retrieve { (books:[Book], error: Error?) in
 
     if let err = error {
-        print(err)
+        print("[❌] Error: \(err)")
     }
     else {
-        print("\(#function) books: \(books)")
+        print("[✅] books: \(books)")
+    }
+}
+
+Book.manager.retrieve(identifier: 1) { (result) in
+
+    switch result {
+    case .success (let book):
+        print("[✅] book: \(book)")
+    case .error (let error):
+        print("[❌] Error: \(error)")
     }
 }
 

@@ -10,6 +10,8 @@ import Foundation
 
 public protocol RESTResource {
 
+    func path(forOperation operation: RESTOperation, value: Int?) -> String
+
     func path(forOperation operation: RESTOperation) -> String
 }
 
