@@ -16,7 +16,7 @@ struct BookResource: RESTResource {
 
         switch operation {
         case .create:
-            return BookResource.root + "book"
+            fallthrough
         case .getAll:
             return BookResource.root + "books"
         case .delete:
@@ -40,7 +40,10 @@ struct Book: ResourceRepresentable {
     let author:String
     let isbn: String
 
-    init(id id_:Int, title title_:String, author author_:String, isbn isbn_:String) {
+    init(id id_:Int,
+         title title_:String,
+         author author_:String,
+         isbn isbn_:String) {
         id = id_
         title = title_
         author = author_
@@ -53,26 +56,60 @@ struct Book: ResourceRepresentable {
         author = data.dictionary?["author"] as? String ?? ""
         isbn = data.dictionary?["isbn"] as? String ?? ""
     }
-}
 
-Book.manager.retrieve { (books:[Book], error: Error?) in
-
-    if let err = error {
-        print("[❌] Error: \(err)")
-    }
-    else {
-        print("[✅] books: \(books)")
-    }
-}
-
-Book.manager.retrieve(identifier: 1) { (result) in
-
-    switch result {
-    case .success (let book):
-        print("[✅] book: \(book)")
-    case .error (let error):
-        print("[❌] Error: \(error)")
+    func jsonRepresentation(for foo: RESTOperation) -> JSON {
+        let dictionary: [String: Any] = [
+            "title" : title,
+            "author" : author,
+            "isbn" : isbn
+        ]
+        return JSON(dictionary: dictionary)
     }
 }
+
+func retrieveAll() {
+
+    Book.manager.retrieve { (books:[Book], error: Error?) in
+
+        if let err = error {
+            print("[❌] Error: \(err)")
+        }
+        else {
+            print("[✅] books: \(books)")
+        }
+    }
+}
+
+func retrieve() {
+
+    Book.manager.retrieve(identifier: 1) { (result) in
+
+        switch result {
+        case .success (let book):
+            print("[✅] book: \(book)")
+        case .error (let error):
+            print("[❌] Error: \(error)")
+        }
+    }
+}
+
+func create() {
+
+    let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
+
+    Book.manager.create(item: book) { (result) in
+
+        switch result {
+        case .success (let book):
+            print("[✅] book: \(book)")
+        case .error (let error):
+            print("[❌] Error: \(error)")
+        }
+    }
+}
+
+create()
 
 PlaygroundPage.current.needsIndefiniteExecution = true
+
+

@@ -21,7 +21,7 @@ public struct JSON {
     fileprivate var rawNull: NSNull = NSNull()
     fileprivate var rawBool: Bool = false
 
-    init(data: Data, options opt: JSONSerialization.ReadingOptions = .allowFragments) {
+    public init(data: Data, options opt: JSONSerialization.ReadingOptions = .allowFragments) {
         do {
             let obj: Any = try JSONSerialization.jsonObject(with: data, options: opt)
             self.init(jsonObject: obj)
@@ -29,6 +29,10 @@ public struct JSON {
             print("error: \(error)")
             self.init(jsonObject: NSNull())
         }
+    }
+
+    public init(dictionary: [String: Any]) {
+        self.init(jsonObject: dictionary)
     }
 
     fileprivate init(jsonObject: Any) {
@@ -40,6 +44,8 @@ public struct JSON {
             switch type {
             case .array:
                 return rawArray
+            case .dictionary:
+                return rawDictionary
             default:
                 return rawNull
             }

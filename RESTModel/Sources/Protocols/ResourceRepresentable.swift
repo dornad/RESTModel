@@ -19,4 +19,7 @@ public protocol ResourceRepresentable {
 
     /// Initializes with a JSON Resource.
     init?(data:JSON)
+
+    /// Converts to a JSON representation that can be sent
+    func jsonRepresentation(for foo: RESTOperation) -> JSON
 }
