@@ -43,4 +43,22 @@ drop.post("books") { request in
     return try JSON(node:["id": 1, "title": title, "author": author, "isbn": isbn])
 }
 
+drop.put("books", Int.self) { request, bookId in
+
+	if bookId != 1 {
+
+		throw Abort.notFound
+    }
+
+    print("json = \(request.json)")
+
+	let title = request.json?["title"]?.string ?? "old title"
+	let author = request.json?["author"]?.string ?? "old author"
+	let isbn = request.json?["isbn"]?.string ?? "old_isbn"
+
+    // in here it would save the book to the db...
+
+    return try JSON(node:["id": 1, "title": title, "author": author, "isbn": isbn])
+}
+
 drop.run()

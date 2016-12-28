@@ -29,6 +29,38 @@ public enum NetworkManagerError: Error {
 
 public final class NetworkManager<T:ResourceRepresentable> {
 
+    public func update(item:T, callback: @escaping (Result<T>) -> Void) {
+
+        let path = T.resourceInformation.path(forOperation: .update, value: item.identifier)
+
+        guard let url = URL(string: path) else {
+
+            callback( Result.error(NetworkManagerError.noURLForOperation) )
+            return
+        }
+
+        let json = item.jsonRepresentation(for: .update)
+
+        makeHTTPPutRequest(url: url, json: json) { (result) in
+
+            switch result {
+            case .success(let json):
+
+                print("[⚠️] json: \(json)")
+
+                guard let model = T(data: json) else {
+                    callback( Result.error(NetworkManagerError.incorrectJSON) )
+                    return
+                }
+                callback( Result.success(model) )
+
+            case .error(let err):
+
+                callback( Result.error(err) )
+            }
+        }
+    }
+
     public func create(item: T, callback: @escaping (Result<T>) -> Void) {
 
         let path = T.resourceInformation.path(forOperation: .create)
@@ -127,6 +159,63 @@ public final class NetworkManager<T:ResourceRepresentable> {
 }
 
 extension NetworkManager {
+
+    fileprivate func makeHTTPPutRequest(
+        url: URL,
+        json:JSON,
+        completion: @escaping (JSONResult) -> Void)
+    {
+        do {
+            let data = try JSONSerialization.data(
+                withJSONObject: json.object,
+                options: .prettyPrinted)
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = data
+
+            let session = URLSession.shared
+
+            let task = session.dataTask(with: request) { (data, response, error) in
+
+                if let error = error {
+                    completion( .error(NetworkManagerError.failedRequest(cause: error)) )
+                    return
+                }
+
+                guard let httpResponse = response as? HTTPURLResponse,
+                    200 ... 299 ~= httpResponse.statusCode else
+                {
+                    let status = (response as! HTTPURLResponse).statusCode
+                    completion(
+                        .error(
+                            NetworkManagerError.responseStatus(status: status)
+                        )
+                    )
+                    return
+                }
+
+                guard let data = data else {
+                    completion( .error(NetworkManagerError.noData) )
+                    return
+                }
+
+                let json = JSON(data: data)
+
+                completion(.success(json))
+            }
+
+            task.resume()
+        }
+        catch {
+            completion(
+                .error(
+                    NetworkManagerError.unknown(error)
+                )
+            )
+        }
+    }
 
     fileprivate func makeHTTPPostRequest(url:URL, json:JSON, completion: @escaping (JSONResult) -> Void) {
 

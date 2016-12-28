@@ -17,6 +17,9 @@ public protocol ResourceRepresentable {
     /// A type that takes care of REST operations for this type.
     static var manager: NetworkManager<Self> { get }
 
+    /// An identifier
+    var identifier: Int { get }
+
     /// Initializes with a JSON Resource.
     init?(data:JSON)
 

@@ -24,7 +24,10 @@ struct BookResource: RESTResource {
         case .get:
             fallthrough
         case .update:
-            return BookResource.root + "books/\(value!)"
+            guard let identifier = value else {
+                return BookResource.root
+            }
+            return BookResource.root + "books/\(identifier)"
         }
     }
 }
@@ -35,7 +38,7 @@ struct Book: ResourceRepresentable {
 
     static var resourceInformation: RESTResource = BookResource()
 
-    let id: Int
+    let identifier: Int
     let title:String
     let author:String
     let isbn: String
@@ -44,20 +47,21 @@ struct Book: ResourceRepresentable {
          title title_:String,
          author author_:String,
          isbn isbn_:String) {
-        id = id_
+        identifier = id_
         title = title_
         author = author_
         isbn = isbn_
     }
 
     init?(data: JSON) {
-        id = data.dictionary?["id"] as? Int ?? 0
+        identifier = data.dictionary?["id"] as? Int ?? 0
         title = data.dictionary?["title"] as? String ?? ""
         author = data.dictionary?["author"] as? String ?? ""
         isbn = data.dictionary?["isbn"] as? String ?? ""
     }
 
-    func jsonRepresentation(for foo: RESTOperation) -> JSON {
+    func jsonRepresentation(for operation: RESTOperation) -> JSON {
+
         let dictionary: [String: Any] = [
             "title" : title,
             "author" : author,
@@ -108,7 +112,22 @@ func create() {
     }
 }
 
-create()
+func update() {
+
+    let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
+
+    Book.manager.update(item: book) { (result) in
+
+        switch result {
+        case .success (let book):
+            print("[✅] book: \(book)")
+        case .error (let error):
+            print("[❌] Error: \(error)")
+        }
+    }
+}
+
+update()
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
