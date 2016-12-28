@@ -18,6 +18,11 @@ fileprivate enum JSONResult {
     case error (Error)
 }
 
+fileprivate enum HTTPResult {
+    case success (code: Int)
+    case error (Error)
+}
+
 public enum NetworkManagerError: Error {
     case noURLForOperation
     case noData
@@ -28,6 +33,32 @@ public enum NetworkManagerError: Error {
 }
 
 public final class NetworkManager<T:ResourceRepresentable> {
+
+    public func delete(item:T, callback: @escaping (Result<T>) -> Void) {
+
+        let path = T.resourceInformation.path(forOperation: .delete, value: item.identifier)
+
+        guard let url = URL(string: path) else {
+
+            callback( Result.error(NetworkManagerError.noURLForOperation) )
+            return
+        }
+
+        makeHTTPDeleteRequest(url: url) { (result) in
+
+            switch result {
+            case .success(let httpStatusCode):
+
+                print("[⚠️] success!  Status code: \(httpStatusCode)")
+
+                callback( Result.success(item) )
+
+            case .error(let err):
+
+                callback( Result.error(err) )
+            }
+        }
+    }
 
     public func update(item:T, callback: @escaping (Result<T>) -> Void) {
 
@@ -159,6 +190,40 @@ public final class NetworkManager<T:ResourceRepresentable> {
 }
 
 extension NetworkManager {
+
+    fileprivate func makeHTTPDeleteRequest(
+        url: URL,
+        completion: @escaping (HTTPResult) -> Void)
+    {
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+
+        let session = URLSession.shared
+
+        let task = session.dataTask(with: request) { (data, response, error) in
+
+            if let error = error {
+                completion( .error(NetworkManagerError.failedRequest(cause: error)) )
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                200 ... 299 ~= httpResponse.statusCode else
+            {
+                let status = (response as! HTTPURLResponse).statusCode
+                completion(
+                    .error(
+                        NetworkManagerError.responseStatus(status: status)
+                    )
+                )
+                return
+            }
+
+            completion(.success(code: httpResponse.statusCode))
+        }
+
+        task.resume()
+    }
 
     fileprivate func makeHTTPPutRequest(
         url: URL,

@@ -79,7 +79,7 @@ func retrieveAll() {
             print("[❌] Error: \(err)")
         }
         else {
-            print("[✅] books: \(books)")
+            print("[✅] fetched books: \(books)")
         }
     }
 }
@@ -90,7 +90,7 @@ func retrieve() {
 
         switch result {
         case .success (let book):
-            print("[✅] book: \(book)")
+            print("[✅] book retrieved: \(book)")
         case .error (let error):
             print("[❌] Error: \(error)")
         }
@@ -105,7 +105,7 @@ func create() {
 
         switch result {
         case .success (let book):
-            print("[✅] book: \(book)")
+            print("[✅] book created: \(book)")
         case .error (let error):
             print("[❌] Error: \(error)")
         }
@@ -120,14 +120,29 @@ func update() {
 
         switch result {
         case .success (let book):
-            print("[✅] book: \(book)")
+            print("[✅] updated book: \(book)")
         case .error (let error):
             print("[❌] Error: \(error)")
         }
     }
 }
 
-update()
+func delete() {
+
+    let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
+
+    Book.manager.delete(item: book) { (result) in
+
+        switch result {
+        case .success (let book):
+            print("[✅] book deleted: \(book)")
+        case .error (let error):
+            print("[❌] Error: \(error)")
+        }
+    }
+}
+
+delete()
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
