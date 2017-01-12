@@ -34,7 +34,7 @@ struct BookResource: RESTResource {
 
 struct Book: ResourceRepresentable {
 
-    static var manager = NetworkManager<Book>()
+    static var manager = AnyNetworkManager<Book>()
 
     static var resourceInformation: RESTResource = BookResource()
 
@@ -53,7 +53,7 @@ struct Book: ResourceRepresentable {
         isbn = isbn_
     }
 
-    init?(data: JSON) {
+    init(data: JSON) throws {
         identifier = data.dictionary?["id"] as? Int ?? 0
         title = data.dictionary?["title"] as? String ?? ""
         author = data.dictionary?["author"] as? String ?? ""
@@ -142,7 +142,7 @@ func delete() {
     }
 }
 
-delete()
+retrieveAll()
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 

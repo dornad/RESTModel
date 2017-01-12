@@ -8,17 +8,12 @@
 
 import Foundation
 
-public enum Result<T: ResourceRepresentable> {
-    case success (T)
-    case error (Error)
-}
-
-fileprivate enum JSONResult {
+internal enum JSONResult {
     case success (JSON)
     case error (Error)
 }
 
-fileprivate enum HTTPResult {
+internal enum HTTPResult {
     case success (code: Int)
     case error (Error)
 }
@@ -32,7 +27,7 @@ public enum NetworkManagerError: Error {
     case unknown (Error)
 }
 
-public final class NetworkManager<T:ResourceRepresentable> {
+public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkManager {
 
     public func delete(item:T, callback: @escaping (Result<T>) -> Void) {
 
@@ -79,7 +74,7 @@ public final class NetworkManager<T:ResourceRepresentable> {
 
                 print("[⚠️] json: \(json)")
 
-                guard let model = T(data: json) else {
+                guard let model = try? T(data: json) else {
                     callback( Result.error(NetworkManagerError.incorrectJSON) )
                     return
                 }
@@ -111,7 +106,7 @@ public final class NetworkManager<T:ResourceRepresentable> {
 
                 print("[⚠️] json: \(json)")
 
-                guard let model = T(data: json) else {
+                guard let model = try? T(data: json) else {
                     callback( Result.error(NetworkManagerError.incorrectJSON) )
                     return
                 }
@@ -141,7 +136,7 @@ public final class NetworkManager<T:ResourceRepresentable> {
 
                 print("[⚠️] json: \(json)")
 
-                guard let model = T(data: json) else {
+                guard let model = try? T(data: json) else {
                     callback( Result.error(NetworkManagerError.incorrectJSON) )
                     return
                 }
@@ -174,7 +169,7 @@ public final class NetworkManager<T:ResourceRepresentable> {
                     return
                 }
                 let models = jsonArray.flatMap { (json_) -> T? in
-                    return T(data: json_)
+                    return try? T(data: json_)
                 }
                 callback(models, nil)
 
@@ -189,7 +184,7 @@ public final class NetworkManager<T:ResourceRepresentable> {
     }
 }
 
-extension NetworkManager {
+extension URLSessionNetworkManager {
 
     fileprivate func makeHTTPDeleteRequest(
         url: URL,

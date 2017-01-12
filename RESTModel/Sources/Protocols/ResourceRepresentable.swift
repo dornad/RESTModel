@@ -15,13 +15,13 @@ public protocol ResourceRepresentable {
     static var resourceInformation: RESTResource { get }
 
     /// A type that takes care of REST operations for this type.
-    static var manager: NetworkManager<Self> { get }
+    static var manager: AnyNetworkManager<Self> { get }
 
     /// An identifier
     var identifier: Int { get }
 
     /// Initializes with a JSON Resource.
-    init?(data:JSON)
+    init(data:JSON) throws
 
     /// Converts to a JSON representation that can be sent
     func jsonRepresentation(for foo: RESTOperation) -> JSON
