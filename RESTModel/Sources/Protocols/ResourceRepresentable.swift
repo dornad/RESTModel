@@ -11,18 +11,25 @@ import Foundation
 /// A type that can be represented by a REST-ful Resource
 public protocol ResourceRepresentable {
 
-    /// The Resource holding information about how to convert this model into its RESTful resource.
+    /// This type holds information about how to convert a `ResourceRepresentable` into its RESTful resource.
     static var resourceInformation: RESTResource { get }
 
-    /// A type that takes care of REST operations for this type.
+    /// A type-erased manager that takes care of networking operations on behalf of the model.
     static var manager: AnyNetworkManager<Self> { get }
 
-    /// An identifier
+    /// An unique identifier for the model.
+    ///
+    /// This would correspond to the identifier of a resource in a REST api, for example, for `GET https://test.myapi.org/someResourceName/1`, the identifier would be `1`
     var identifier: Int { get }
 
-    /// Initializes with a JSON Resource.
+    /// Initializes your model from a JSON.
+    ///
+    /// - Parameter data: the JSON data.
+    /// - Throws: an error thrown when the Model cannot be initialized from the JSON data.
     init(data:JSON) throws
 
-    /// Converts to a JSON representation that can be sent
-    func jsonRepresentation(for foo: RESTOperation) -> JSON
+    /// Provides the JSON representation of the `ResourceRepresentable` that is required in a specific REST Operation
+    /// - Parameter operation: The REST operation that is being requested.
+    /// - Returns: A JSON value.
+    func jsonRepresentation(for operation: RESTOperation) -> JSON
 }

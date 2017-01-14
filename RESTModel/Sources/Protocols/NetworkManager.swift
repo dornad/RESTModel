@@ -8,13 +8,20 @@
 
 import Foundation
 
+
+/// An enumeration representing the Result of an operation with the Network Manager.
+///
+/// - success: The operation completed sucessfully.
+/// - error: The operation failed, or completed withj an error.
 public enum Result<T: ResourceRepresentable> {
     case success (T)
     case error (Error)
 }
 
+/// Performs networking operations for a `ResourceRepresentable`.
 public protocol NetworkManager {
 
+    /// The `ResourceRepresentable` associated to this class.
     associatedtype T: ResourceRepresentable
 
     func delete(item:T, callback: @escaping (Result<T>) -> Void)

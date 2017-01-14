@@ -31,7 +31,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
     public func delete(item:T, callback: @escaping (Result<T>) -> Void) {
 
-        let path = T.resourceInformation.path(forOperation: .delete, value: item.identifier)
+        let path = T.resourceInformation.path(for: .delete, withIdentifier: item.identifier)
 
         guard let url = URL(string: path) else {
 
@@ -57,7 +57,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
     public func update(item:T, callback: @escaping (Result<T>) -> Void) {
 
-        let path = T.resourceInformation.path(forOperation: .update, value: item.identifier)
+        let path = T.resourceInformation.path(for: .update, withIdentifier: item.identifier)
 
         guard let url = URL(string: path) else {
 
@@ -89,7 +89,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
     public func create(item: T, callback: @escaping (Result<T>) -> Void) {
 
-        let path = T.resourceInformation.path(forOperation: .create)
+        let path = T.resourceInformation.path(for: .create)
 
         guard let url = URL(string: path) else {
 
@@ -121,7 +121,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
     public func retrieve(identifier: Int, callback: @escaping (Result<T>)-> Void) {
 
-        let path = T.resourceInformation.path(forOperation: .get, value: identifier)
+        let path = T.resourceInformation.path(for: .get, withIdentifier: identifier)
 
         guard let url = URL(string: path) else {
 
@@ -151,7 +151,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
     public func retrieve(callback: @escaping ([T], Error?) -> Void) {
 
-        let path = T.resourceInformation.path(forOperation: .getAll)
+        let path = T.resourceInformation.path(for: .getAll)
 
         guard let url = URL(string: path) else {
 
