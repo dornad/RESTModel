@@ -9,6 +9,14 @@ drop.get("hello") { request in
         ])
 }
 
+drop.get("episodes") { request in
+    let episodes: [Node] = [
+        ["id": "id1", "title": "Episode 1"],
+        ["id": "id2", "title": "Episode 2"],
+    ]
+    return try JSON(node: episodes)
+}
+
 drop.get("books") {  request in
 	let books: [Node] = [
 		["id": 1, "title": "Foo", "author": "Mr. Foo", "isbn": "1234"],

@@ -12,10 +12,10 @@ import Foundation
 public protocol ResourceRepresentable {
 
     /// This type holds information about how to convert a `ResourceRepresentable` into its RESTful resource.
-    static var resourceInformation: RESTResource { get }
+    static var resourceInformation: AnyRESTResource<URLComponents> { get }
 
     /// A type-erased manager that takes care of networking operations on behalf of the model.
-    static var manager: AnyNetworkManager<Self> { get }
+    static var service: AnyNetworkService<Self> { get }
 
     /// An unique identifier for the model.
     ///

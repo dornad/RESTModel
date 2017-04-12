@@ -4,39 +4,65 @@ import UIKit
 import RESTModel
 import PlaygroundSupport
 
+//: ## Usage
+//:
+//: - Run the included server via Vapor.  On the command line:
+//:     - vapor build
+//:     - vapor run
+//:
+//: Then call one of these functions:
+//: - `retrieveAll()`
+//: - `retrieve()`
+//: - `create()`
+//: - `delete()`
+
+//:  ### Book Resource
+
 struct BookResource: RESTResource {
 
-    static let root = "http://localhost:8080/"
-
-    func path(forOperation operation: RESTOperation) -> String {
-        return path(forOperation: operation, value: nil)
+    var root: URLComponents {
+        var components: URLComponents = URLComponents()
+        components.scheme = "http"
+        components.port = 8080
+        components.host = "localhost"
+        components.path = "/books"
+        return components
     }
 
-    func path(forOperation operation: RESTOperation, value: Int? = nil) -> String {
+    func path(for operation: RESTOperation) -> URLComponents {
+        return path(for: operation, withIdentifier: nil)
+    }
+
+    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable? = nil) -> URLComponents {
+
+        var root_ = root
 
         switch operation {
         case .create:
             fallthrough
         case .getAll:
-            return BookResource.root + "books"
+            fallthrough
         case .delete:
             fallthrough
         case .get:
             fallthrough
         case .update:
-            guard let identifier = value else {
-                return BookResource.root
+            if let value = identifier {
+                root_.path =  root_.path + "/\(value)"
             }
-            return BookResource.root + "books/\(identifier)"
         }
+
+        return root_
     }
 }
 
+//:  ### Book Model
+
 struct Book: ResourceRepresentable {
 
-    static var manager = AnyNetworkManager<Book>()
+    static var service = AnyNetworkService<Book>()
 
-    static var resourceInformation: RESTResource = BookResource()
+    static var resourceInformation = AnyRESTResource.from( BookResource() )
 
     let identifier: Int
     let title:String
@@ -71,9 +97,11 @@ struct Book: ResourceRepresentable {
     }
 }
 
+//:  ### C.R.U.D. Functions
+
 func retrieveAll() {
 
-    Book.manager.retrieve { (books:[Book], error: Error?) in
+    Book.service.retrieve { (books:[Book], error: Error?) in
 
         if let err = error {
             print("[❌] Error: \(err)")
@@ -86,7 +114,7 @@ func retrieveAll() {
 
 func retrieve() {
 
-    Book.manager.retrieve(identifier: 1) { (result) in
+    Book.service.retrieve(identifier: 1) { (result) in
 
         switch result {
         case .success (let book):
@@ -101,7 +129,7 @@ func create() {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.manager.create(item: book) { (result) in
+    Book.service.create(item: book) { (result) in
 
         switch result {
         case .success (let book):
@@ -116,7 +144,7 @@ func update() {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.manager.update(item: book) { (result) in
+    Book.service.update(item: book) { (result) in
 
         switch result {
         case .success (let book):
@@ -131,7 +159,7 @@ func delete() {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.manager.delete(item: book) { (result) in
+    Book.service.delete(item: book) { (result) in
 
         switch result {
         case .success (let book):
@@ -142,8 +170,10 @@ func delete() {
     }
 }
 
-retrieveAll()
+//: Call the functions here
+
+delete()
+
+//: This line required for network operations
 
 PlaygroundPage.current.needsIndefiniteExecution = true
-
-

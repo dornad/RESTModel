@@ -16,6 +16,7 @@
 		9F6338FB1E10968D00FB6D70 /* RESTModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F6338F11E10968D00FB6D70 /* RESTModel.framework */; };
 		9F6339001E10968D00FB6D70 /* RESTModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6338FF1E10968D00FB6D70 /* RESTModelTests.swift */; };
 		9F6339021E10968D00FB6D70 /* RESTModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F6338F41E10968D00FB6D70 /* RESTModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FA9B0481E9EB970007068D8 /* AnyRESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B0471E9EB970007068D8 /* AnyRESTResource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		9F6338FA1E10968D00FB6D70 /* RESTModelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RESTModelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F6338FF1E10968D00FB6D70 /* RESTModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RESTModelTests.swift; sourceTree = "<group>"; };
 		9F6339011E10968D00FB6D70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9FA9B0471E9EB970007068D8 /* AnyRESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyRESTResource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 			children = (
 				9F2E8AA41E109E6A00592885 /* URLSessionNetworkManager.swift */,
 				9F579E4A1E2777AF00952A79 /* AnyNetworkManager.swift */,
+				9FA9B0471E9EB970007068D8 /* AnyRESTResource.swift */,
 			);
 			name = DefaultImplementations;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				9F2E8AA11E109B6A00592885 /* ResourceRepresentable.swift in Sources */,
 				9F579E481E27714B00952A79 /* NetworkManager.swift in Sources */,
 				9F579E4B1E2777AF00952A79 /* AnyNetworkManager.swift in Sources */,
+				9FA9B0481E9EB970007068D8 /* AnyRESTResource.swift in Sources */,
 				9F2E8AA51E109E6A00592885 /* URLSessionNetworkManager.swift in Sources */,
 				9F2E8AAD1E10ADDC00592885 /* RESTResource.swift in Sources */,
 			);

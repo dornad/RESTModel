@@ -27,13 +27,13 @@ public enum NetworkManagerError: Error {
     case unknown (Error)
 }
 
-public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkManager {
+public final class URLSessionNetworkService<T:ResourceRepresentable>: NetworkService {
 
-    public func delete(item:T, callback: @escaping (Result<T>) -> Void) {
+    public func delete(item: T, callback: @escaping (Result<T>) -> Void) {
 
         let path = T.resourceInformation.path(for: .delete, withIdentifier: item.identifier)
 
-        guard let url = URL(string: path) else {
+        guard let url = path.url else {
 
             callback( Result.error(NetworkManagerError.noURLForOperation) )
             return
@@ -59,7 +59,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
         let path = T.resourceInformation.path(for: .update, withIdentifier: item.identifier)
 
-        guard let url = URL(string: path) else {
+        guard let url = path.url else {
 
             callback( Result.error(NetworkManagerError.noURLForOperation) )
             return
@@ -91,7 +91,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
         let path = T.resourceInformation.path(for: .create)
 
-        guard let url = URL(string: path) else {
+        guard let url = path.url else {
 
             callback( Result.error(NetworkManagerError.noURLForOperation) )
             return
@@ -123,7 +123,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
         let path = T.resourceInformation.path(for: .get, withIdentifier: identifier)
 
-        guard let url = URL(string: path) else {
+        guard let url = path.url else {
 
             callback( Result.error(NetworkManagerError.noURLForOperation) )
             return
@@ -153,7 +153,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
 
         let path = T.resourceInformation.path(for: .getAll)
 
-        guard let url = URL(string: path) else {
+        guard let url = path.url else {
 
             callback([], NetworkManagerError.noURLForOperation)
             return
@@ -184,7 +184,7 @@ public final class URLSessionNetworkManager<T:ResourceRepresentable>: NetworkMan
     }
 }
 
-extension URLSessionNetworkManager {
+extension URLSessionNetworkService {
 
     fileprivate func makeHTTPDeleteRequest(
         url: URL,

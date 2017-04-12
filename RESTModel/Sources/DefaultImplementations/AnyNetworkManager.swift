@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class AnyNetworkManager <U: ResourceRepresentable> : NetworkManager {
+public final class AnyNetworkService <U: ResourceRepresentable> : NetworkService {
 
     public typealias T = U
 
@@ -18,7 +18,7 @@ public final class AnyNetworkManager <U: ResourceRepresentable> : NetworkManager
     private let _retrieve: ((Int, @escaping (Result<U>) -> Void) -> Void)
     private let _retrieveAll: ((@escaping ([U], Error?) -> Void) -> Void)
 
-    public init <Base: NetworkManager>(base b: Base) where Base.T == U {
+    public init <Base: NetworkService>(base b: Base) where Base.T == U {
         _delete = b.delete
         _update = b.update
         _create = b.create
@@ -47,10 +47,10 @@ public final class AnyNetworkManager <U: ResourceRepresentable> : NetworkManager
     }
 }
 
-extension AnyNetworkManager {
+extension AnyNetworkService {
 
     public convenience init() {
-        let defaultManager = URLSessionNetworkManager<U>()
+        let defaultManager = URLSessionNetworkService<U>()
         self.init(base: defaultManager)
     }
 }

@@ -19,7 +19,7 @@ public enum Result<T: ResourceRepresentable> {
 }
 
 /// Performs networking operations for a `ResourceRepresentable`.
-public protocol NetworkManager {
+public protocol NetworkService {
 
     /// The `ResourceRepresentable` associated to this class.
     associatedtype T: ResourceRepresentable
