@@ -1,6 +1,6 @@
 //
 //  RouteRepresentable.swift
-//  RESTModel
+//  Chillax
 //
 //  Created by Daniel Rodriguez on 12/25/16.
 //  Copyright © 2016 REST Models. All rights reserved.

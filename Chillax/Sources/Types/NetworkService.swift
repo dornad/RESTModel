@@ -1,6 +1,6 @@
 //
 //  NetworkService.swift
-//  RESTModel
+//  Chillax
 //
 //  Created by Daniel Rodriguez on 1/12/17.
 //  Copyright © 2017 REST Models. All rights reserved.

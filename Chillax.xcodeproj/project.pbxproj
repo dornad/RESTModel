@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9F2E8AA11E109B6A00592885 /* ResourceRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2E8AA01E109B6A00592885 /* ResourceRepresentable.swift */; };
-		9F2E8AA51E109E6A00592885 /* URLSessionNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2E8AA41E109E6A00592885 /* URLSessionNetworkService.swift */; };
-		9F579E481E27714B00952A79 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F579E471E27714B00952A79 /* NetworkService.swift */; };
-		9F579E4B1E2777AF00952A79 /* AnyNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F579E4A1E2777AF00952A79 /* AnyNetworkManager.swift */; };
-		9F6338FB1E10968D00FB6D70 /* RESTModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F6338F11E10968D00FB6D70 /* RESTModel.framework */; };
-		9F6339001E10968D00FB6D70 /* RESTModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6338FF1E10968D00FB6D70 /* RESTModelTests.swift */; };
-		9F6339021E10968D00FB6D70 /* RESTModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F6338F41E10968D00FB6D70 /* RESTModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9FA9B04A1E9FBD58007068D8 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B0491E9FBD58007068D8 /* JSON.swift */; };
-		9FA9B04C1E9FC49B007068D8 /* RESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B04B1E9FC49B007068D8 /* RESTResource.swift */; };
-		9FA9B04E1E9FC4A6007068D8 /* AnyRESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B04D1E9FC4A6007068D8 /* AnyRESTResource.swift */; };
-		9FA9B0501E9FE4EE007068D8 /* RESTOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B04F1E9FE4EE007068D8 /* RESTOperation.swift */; };
-		9FA9B0521E9FE539007068D8 /* RESTResource+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B0511E9FE539007068D8 /* RESTResource+JSON.swift */; };
+		9F6338FB1E10968D00FB6D70 /* Chillax.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F6338F11E10968D00FB6D70 /* Chillax.framework */; };
+		9F879AE81E9FE831001B88FA /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE21E9FE831001B88FA /* JSON.swift */; };
+		9F879AE91E9FE831001B88FA /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE31E9FE831001B88FA /* NetworkService.swift */; };
+		9F879AEA1E9FE831001B88FA /* ResourceRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE41E9FE831001B88FA /* ResourceRepresentable.swift */; };
+		9F879AEB1E9FE831001B88FA /* RESTOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE51E9FE831001B88FA /* RESTOperation.swift */; };
+		9F879AEC1E9FE831001B88FA /* RESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE61E9FE831001B88FA /* RESTResource.swift */; };
+		9F879AED1E9FE831001B88FA /* RESTResource+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE71E9FE831001B88FA /* RESTResource+JSON.swift */; };
+		9F879AF11E9FE844001B88FA /* AnyNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AEE1E9FE844001B88FA /* AnyNetworkManager.swift */; };
+		9F879AF21E9FE844001B88FA /* AnyRESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AEF1E9FE844001B88FA /* AnyRESTResource.swift */; };
+		9F879AF61E9FE851001B88FA /* Chillax.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F879AF41E9FE851001B88FA /* Chillax.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9F879AF91E9FE891001B88FA /* URLSessionNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AF81E9FE891001B88FA /* URLSessionNetworkService.swift */; };
+		9F879AFF1E9FE929001B88FA /* ChillaxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AFB1E9FE922001B88FA /* ChillaxTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,22 +32,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9F2E8AA01E109B6A00592885 /* ResourceRepresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResourceRepresentable.swift; path = Sources/Protocols/ResourceRepresentable.swift; sourceTree = "<group>"; };
-		9F2E8AA41E109E6A00592885 /* URLSessionNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLSessionNetworkService.swift; path = Sources/URLSessionNetworkService.swift; sourceTree = "<group>"; };
-		9F579E471E27714B00952A79 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkService.swift; path = Sources/Protocols/NetworkService.swift; sourceTree = "<group>"; };
-		9F579E4A1E2777AF00952A79 /* AnyNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyNetworkManager.swift; path = Sources/DefaultImplementations/AnyNetworkManager.swift; sourceTree = "<group>"; };
 		9F579E4C1E277BEB00952A79 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
-		9F6338F11E10968D00FB6D70 /* RESTModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RESTModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F6338F41E10968D00FB6D70 /* RESTModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RESTModel.h; sourceTree = "<group>"; };
-		9F6338F51E10968D00FB6D70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9F6338FA1E10968D00FB6D70 /* RESTModelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RESTModelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F6338FF1E10968D00FB6D70 /* RESTModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RESTModelTests.swift; sourceTree = "<group>"; };
-		9F6339011E10968D00FB6D70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9FA9B0491E9FBD58007068D8 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSON.swift; path = Sources/Protocols/JSON.swift; sourceTree = "<group>"; };
-		9FA9B04B1E9FC49B007068D8 /* RESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RESTResource.swift; path = Sources/Protocols/RESTResource.swift; sourceTree = "<group>"; };
-		9FA9B04D1E9FC4A6007068D8 /* AnyRESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyRESTResource.swift; path = Sources/DefaultImplementations/AnyRESTResource.swift; sourceTree = "<group>"; };
-		9FA9B04F1E9FE4EE007068D8 /* RESTOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RESTOperation.swift; path = Sources/Protocols/RESTOperation.swift; sourceTree = "<group>"; };
-		9FA9B0511E9FE539007068D8 /* RESTResource+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "RESTResource+JSON.swift"; path = "Sources/Protocols/RESTResource+JSON.swift"; sourceTree = "<group>"; };
+		9F6338F11E10968D00FB6D70 /* Chillax.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Chillax.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F6338FA1E10968D00FB6D70 /* ChillaxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChillaxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F879AE21E9FE831001B88FA /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSON.swift; path = Chillax/Sources/Types/JSON.swift; sourceTree = SOURCE_ROOT; };
+		9F879AE31E9FE831001B88FA /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkService.swift; path = Chillax/Sources/Types/NetworkService.swift; sourceTree = SOURCE_ROOT; };
+		9F879AE41E9FE831001B88FA /* ResourceRepresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResourceRepresentable.swift; path = Chillax/Sources/Types/ResourceRepresentable.swift; sourceTree = SOURCE_ROOT; };
+		9F879AE51E9FE831001B88FA /* RESTOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RESTOperation.swift; path = Chillax/Sources/Types/RESTOperation.swift; sourceTree = SOURCE_ROOT; };
+		9F879AE61E9FE831001B88FA /* RESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RESTResource.swift; path = Chillax/Sources/Types/RESTResource.swift; sourceTree = SOURCE_ROOT; };
+		9F879AE71E9FE831001B88FA /* RESTResource+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "RESTResource+JSON.swift"; path = "Chillax/Sources/Types/RESTResource+JSON.swift"; sourceTree = SOURCE_ROOT; };
+		9F879AEE1E9FE844001B88FA /* AnyNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyNetworkManager.swift; path = Chillax/Sources/DefaultImplementations/AnyNetworkManager.swift; sourceTree = SOURCE_ROOT; };
+		9F879AEF1E9FE844001B88FA /* AnyRESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyRESTResource.swift; path = Chillax/Sources/DefaultImplementations/AnyRESTResource.swift; sourceTree = SOURCE_ROOT; };
+		9F879AF41E9FE851001B88FA /* Chillax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chillax.h; path = Chillax/Chillax.h; sourceTree = SOURCE_ROOT; };
+		9F879AF51E9FE851001B88FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Chillax/Info.plist; sourceTree = SOURCE_ROOT; };
+		9F879AF81E9FE891001B88FA /* URLSessionNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLSessionNetworkService.swift; path = Chillax/Sources/DefaultImplementations/URLSessionNetworkService.swift; sourceTree = SOURCE_ROOT; };
+		9F879AFA1E9FE922001B88FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ChillaxTests/Info.plist; sourceTree = SOURCE_ROOT; };
+		9F879AFB1E9FE922001B88FA /* ChillaxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChillaxTests.swift; path = ChillaxTests/ChillaxTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F6338FB1E10968D00FB6D70 /* RESTModel.framework in Frameworks */,
+				9F6338FB1E10968D00FB6D70 /* Chillax.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,9 +72,9 @@
 		9F579E491E27777E00952A79 /* DefaultImplementations */ = {
 			isa = PBXGroup;
 			children = (
-				9FA9B04D1E9FC4A6007068D8 /* AnyRESTResource.swift */,
-				9F2E8AA41E109E6A00592885 /* URLSessionNetworkService.swift */,
-				9F579E4A1E2777AF00952A79 /* AnyNetworkManager.swift */,
+				9F879AF81E9FE891001B88FA /* URLSessionNetworkService.swift */,
+				9F879AEE1E9FE844001B88FA /* AnyNetworkManager.swift */,
+				9F879AEF1E9FE844001B88FA /* AnyRESTResource.swift */,
 			);
 			name = DefaultImplementations;
 			sourceTree = "<group>";
@@ -83,8 +83,10 @@
 			isa = PBXGroup;
 			children = (
 				9F579E4C1E277BEB00952A79 /* MyPlayground.playground */,
-				9F6338F31E10968D00FB6D70 /* RESTModel */,
-				9F6338FE1E10968D00FB6D70 /* RESTModelTests */,
+				9F6338F31E10968D00FB6D70 /* Chillax */,
+				9F879AF41E9FE851001B88FA /* Chillax.h */,
+				9F879AF51E9FE851001B88FA /* Info.plist */,
+				9F6338FE1E10968D00FB6D70 /* ChillaxTests */,
 				9F6338F21E10968D00FB6D70 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,41 +94,41 @@
 		9F6338F21E10968D00FB6D70 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9F6338F11E10968D00FB6D70 /* RESTModel.framework */,
-				9F6338FA1E10968D00FB6D70 /* RESTModelTests.xctest */,
+				9F6338F11E10968D00FB6D70 /* Chillax.framework */,
+				9F6338FA1E10968D00FB6D70 /* ChillaxTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9F6338F31E10968D00FB6D70 /* RESTModel */ = {
+		9F6338F31E10968D00FB6D70 /* Chillax */ = {
 			isa = PBXGroup;
 			children = (
 				9F579E491E27777E00952A79 /* DefaultImplementations */,
 				9F63390B1E1096AF00FB6D70 /* Types */,
-				9F6338F41E10968D00FB6D70 /* RESTModel.h */,
-				9F6338F51E10968D00FB6D70 /* Info.plist */,
 			);
+			name = Chillax;
 			path = RESTModel;
 			sourceTree = "<group>";
 		};
-		9F6338FE1E10968D00FB6D70 /* RESTModelTests */ = {
+		9F6338FE1E10968D00FB6D70 /* ChillaxTests */ = {
 			isa = PBXGroup;
 			children = (
-				9F6338FF1E10968D00FB6D70 /* RESTModelTests.swift */,
-				9F6339011E10968D00FB6D70 /* Info.plist */,
+				9F879AFA1E9FE922001B88FA /* Info.plist */,
+				9F879AFB1E9FE922001B88FA /* ChillaxTests.swift */,
 			);
+			name = ChillaxTests;
 			path = RESTModelTests;
 			sourceTree = "<group>";
 		};
 		9F63390B1E1096AF00FB6D70 /* Types */ = {
 			isa = PBXGroup;
 			children = (
-				9FA9B04F1E9FE4EE007068D8 /* RESTOperation.swift */,
-				9F2E8AA01E109B6A00592885 /* ResourceRepresentable.swift */,
-				9F579E471E27714B00952A79 /* NetworkService.swift */,
-				9FA9B0491E9FBD58007068D8 /* JSON.swift */,
-				9FA9B04B1E9FC49B007068D8 /* RESTResource.swift */,
-				9FA9B0511E9FE539007068D8 /* RESTResource+JSON.swift */,
+				9F879AE21E9FE831001B88FA /* JSON.swift */,
+				9F879AE31E9FE831001B88FA /* NetworkService.swift */,
+				9F879AE41E9FE831001B88FA /* ResourceRepresentable.swift */,
+				9F879AE51E9FE831001B88FA /* RESTOperation.swift */,
+				9F879AE61E9FE831001B88FA /* RESTResource.swift */,
+				9F879AE71E9FE831001B88FA /* RESTResource+JSON.swift */,
 			);
 			name = Types;
 			sourceTree = "<group>";
@@ -138,16 +140,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F6339021E10968D00FB6D70 /* RESTModel.h in Headers */,
+				9F879AF61E9FE851001B88FA /* Chillax.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		9F6338F01E10968C00FB6D70 /* RESTModel */ = {
+		9F6338F01E10968C00FB6D70 /* Chillax */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9F6339051E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "RESTModel" */;
+			buildConfigurationList = 9F6339051E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "Chillax" */;
 			buildPhases = (
 				9F6338EC1E10968C00FB6D70 /* Sources */,
 				9F6338ED1E10968C00FB6D70 /* Frameworks */,
@@ -158,14 +160,14 @@
 			);
 			dependencies = (
 			);
-			name = RESTModel;
+			name = Chillax;
 			productName = RESTModel;
-			productReference = 9F6338F11E10968D00FB6D70 /* RESTModel.framework */;
+			productReference = 9F6338F11E10968D00FB6D70 /* Chillax.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		9F6338F91E10968D00FB6D70 /* RESTModelTests */ = {
+		9F6338F91E10968D00FB6D70 /* ChillaxTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9F6339081E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "RESTModelTests" */;
+			buildConfigurationList = 9F6339081E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "ChillaxTests" */;
 			buildPhases = (
 				9F6338F61E10968D00FB6D70 /* Sources */,
 				9F6338F71E10968D00FB6D70 /* Frameworks */,
@@ -176,9 +178,9 @@
 			dependencies = (
 				9F6338FD1E10968D00FB6D70 /* PBXTargetDependency */,
 			);
-			name = RESTModelTests;
+			name = ChillaxTests;
 			productName = RESTModelTests;
-			productReference = 9F6338FA1E10968D00FB6D70 /* RESTModelTests.xctest */;
+			productReference = 9F6338FA1E10968D00FB6D70 /* ChillaxTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -204,7 +206,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9F6338EB1E10968C00FB6D70 /* Build configuration list for PBXProject "RESTModel" */;
+			buildConfigurationList = 9F6338EB1E10968C00FB6D70 /* Build configuration list for PBXProject "Chillax" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -216,8 +218,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9F6338F01E10968C00FB6D70 /* RESTModel */,
-				9F6338F91E10968D00FB6D70 /* RESTModelTests */,
+				9F6338F01E10968C00FB6D70 /* Chillax */,
+				9F6338F91E10968D00FB6D70 /* ChillaxTests */,
 			);
 		};
 /* End PBXProject section */
@@ -244,15 +246,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F2E8AA11E109B6A00592885 /* ResourceRepresentable.swift in Sources */,
-				9FA9B04A1E9FBD58007068D8 /* JSON.swift in Sources */,
-				9F579E481E27714B00952A79 /* NetworkService.swift in Sources */,
-				9F579E4B1E2777AF00952A79 /* AnyNetworkManager.swift in Sources */,
-				9FA9B0521E9FE539007068D8 /* RESTResource+JSON.swift in Sources */,
-				9FA9B04E1E9FC4A6007068D8 /* AnyRESTResource.swift in Sources */,
-				9FA9B0501E9FE4EE007068D8 /* RESTOperation.swift in Sources */,
-				9F2E8AA51E109E6A00592885 /* URLSessionNetworkService.swift in Sources */,
-				9FA9B04C1E9FC49B007068D8 /* RESTResource.swift in Sources */,
+				9F879AE91E9FE831001B88FA /* NetworkService.swift in Sources */,
+				9F879AEA1E9FE831001B88FA /* ResourceRepresentable.swift in Sources */,
+				9F879AEC1E9FE831001B88FA /* RESTResource.swift in Sources */,
+				9F879AED1E9FE831001B88FA /* RESTResource+JSON.swift in Sources */,
+				9F879AEB1E9FE831001B88FA /* RESTOperation.swift in Sources */,
+				9F879AF91E9FE891001B88FA /* URLSessionNetworkService.swift in Sources */,
+				9F879AE81E9FE831001B88FA /* JSON.swift in Sources */,
+				9F879AF21E9FE844001B88FA /* AnyRESTResource.swift in Sources */,
+				9F879AF11E9FE844001B88FA /* AnyNetworkManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F6339001E10968D00FB6D70 /* RESTModelTests.swift in Sources */,
+				9F879AFF1E9FE929001B88FA /* ChillaxTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,7 +271,7 @@
 /* Begin PBXTargetDependency section */
 		9F6338FD1E10968D00FB6D70 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9F6338F01E10968C00FB6D70 /* RESTModel */;
+			target = 9F6338F01E10968C00FB6D70 /* Chillax */;
 			targetProxy = 9F6338FC1E10968D00FB6D70 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -384,7 +386,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = RESTModel/Info.plist;
+				INFOPLIST_FILE = Chillax/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dornad.RESTModel;
@@ -405,7 +407,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = RESTModel/Info.plist;
+				INFOPLIST_FILE = Chillax/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dornad.RESTModel;
@@ -420,9 +422,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 85HFE5HQ5B;
-				INFOPLIST_FILE = RESTModelTests/Info.plist;
+				INFOPLIST_FILE = ChillaxTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.dornad.RESTModelTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dornad.ChillaxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -433,9 +435,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 85HFE5HQ5B;
-				INFOPLIST_FILE = RESTModelTests/Info.plist;
+				INFOPLIST_FILE = ChillaxTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.dornad.RESTModelTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dornad.ChillaxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -444,7 +446,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9F6338EB1E10968C00FB6D70 /* Build configuration list for PBXProject "RESTModel" */ = {
+		9F6338EB1E10968C00FB6D70 /* Build configuration list for PBXProject "Chillax" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9F6339031E10968D00FB6D70 /* Debug */,
@@ -453,7 +455,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9F6339051E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "RESTModel" */ = {
+		9F6339051E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "Chillax" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9F6339061E10968D00FB6D70 /* Debug */,
@@ -462,7 +464,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9F6339081E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "RESTModelTests" */ = {
+		9F6339081E10968D00FB6D70 /* Build configuration list for PBXNativeTarget "ChillaxTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9F6339091E10968D00FB6D70 /* Debug */,

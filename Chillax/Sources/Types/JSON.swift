@@ -1,6 +1,6 @@
 //
 //  JSON.swift
-//  RESTModel
+//  Chillax
 //
 //  Created by Daniel Rodriguez on 4/13/17.
 //  Copyright © 2017 REST Models. All rights reserved.

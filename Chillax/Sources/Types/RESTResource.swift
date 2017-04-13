@@ -1,6 +1,6 @@
 //
 //  RESTResource.swift
-//  RESTModel
+//  Chillax
 //
 //  Created by Daniel Rodriguez on 12/25/16.
 //  Copyright © 2016 REST Models. All rights reserved.
@@ -49,4 +49,3 @@ public protocol RESTResource {
     /// - Returns: A `JSON`, either a Dictionary or Array of Dictionaries
     func parse(data: Data) -> JSON?
 }
-

@@ -1,15 +1,15 @@
 //
-//  RESTModelTests.swift
-//  RESTModelTests
+//  ChillaxTests.swift
+//  ChillaxTests
 //
 //  Created by Daniel Rodriguez on 12/25/16.
 //  Copyright © 2016 REST Models. All rights reserved.
 //
 
 import XCTest
-@testable import RESTModel
+@testable import Chillax
 
-class RESTModelTests: XCTestCase {
+class ChillaxTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
