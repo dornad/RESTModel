@@ -2,51 +2,48 @@
 
 import Foundation
 import PlaygroundSupport
+import Chillax
 
-var str = "Hello, playground"
+let a: JSONDictionary = ["id": 1]
+let b: JSONDictionary = ["id": 2]
+let c: JSONDictionary = ["id": 3]
 
-protocol Model {
+let aP = a
 
-    init?(JSON: AnyObject)
+let arr_a = [a, b]
+let arr_b = [a, b]
+let arr_c = [a,b,c]
+
+
+print(a == b)
+print(a == aP)
+print(arr_a == arr_b)
+print(arr_a == arr_c)
+
+
+func == <K, V>(left: [K:V], right: [K:V]) -> Bool {
+    return NSDictionary(dictionary: left).isEqual(to: right)
 }
 
+func == <K, V>(left: [[K:V]], right: [[K:V]]) -> Bool {
 
-class Service {
+    guard left.count == right.count else { return false }
 
-    enum FetchType {
+    var result = false
 
+    for leftDict in left {
+
+        var foundMatch = false
+
+        right.forEach { foundMatch = (leftDict == $0) || foundMatch }
+
+        guard foundMatch else { return foundMatch }
+
+        result = foundMatch
     }
 
-    func fetch(what: FetchType) {
-
-    }
-
-    func update() {
-
-    }
-
-    func delete() {
-
-    }
-
-    func save() {
-
-        let url = URL(string:"http://localhost:8080/books")!
-
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-
-        URLSession.shared.dataTask(with: request) { (data, _, _) in
-
-            let json = try? JSONSerialization.jsonObject(with: data!, options: [])
-            print(json)
-            }.resume()
-
-    }
-
+    return result
 }
-
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 

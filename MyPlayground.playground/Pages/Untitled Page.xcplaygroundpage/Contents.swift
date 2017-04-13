@@ -39,7 +39,7 @@ struct BookResource: RESTResource {
 
         switch operation {
         case .create:
-            fallthrough
+            break
         case .delete:
             fallthrough
         case .update:
@@ -69,7 +69,7 @@ struct Book: ResourceRepresentable {
 
     static var resourceInformation = AnyRESTResource.from( BookResource() )
 
-    let identifier: Int
+    let identifier: AnyHashable
     let title:String
     let author:String
     let isbn: String
@@ -183,7 +183,7 @@ func delete() {
 
 //: Call the functions here
 
-retrieve()
+create()
 //: This line required for network operations
 
 PlaygroundPage.current.needsIndefiniteExecution = true

@@ -8,17 +8,17 @@
 
 import Foundation
 
-fileprivate enum JSONResult {
+internal enum JSONResult {
     case success (JSON)
     case error (Error)
 }
 
-fileprivate enum HTTPResult {
+internal enum HTTPResult {
     case success (Data)
     case error (Error)
 }
 
-fileprivate enum NetworkManagerError: Error {
+internal enum NetworkManagerError: Error {
     case noURLForOperation
     case noData
     case invalidResponse
@@ -28,7 +28,11 @@ fileprivate enum NetworkManagerError: Error {
     case unknown (Error)
 }
 
-public final class URLSessionNetworkService<T:ResourceRepresentable>: NetworkService {
+public class URLSessionNetworkService<T:ResourceRepresentable>: NetworkService {
+
+    internal typealias RequestFunctionType = (T?, RESTOperation, @escaping (HTTPResult) -> Void) -> Void
+
+    internal var _requestFunction: (RequestFunctionType)!
 
     public func perform(operation: RESTOperation, input: T, callback: @escaping (Result<T>) -> Void) {
 
@@ -42,7 +46,7 @@ public final class URLSessionNetworkService<T:ResourceRepresentable>: NetworkSer
 
     private func _perform(operation: RESTOperation, input: T?, callback: @escaping (Result<T>) -> Void) {
 
-        httpRequest(item: input, operation: operation) { (result) in
+        _requestFunction(input, operation) { result in
 
             switch result {
             case .success(let data):
@@ -83,45 +87,8 @@ public final class URLSessionNetworkService<T:ResourceRepresentable>: NetworkSer
 
 
     public init() {
-        // NO-OP
+        _requestFunction = _httpRequest
     }
-}
-
-extension URLSessionNetworkService {
-
-    fileprivate func httpRequest(item: T?, operation: RESTOperation, completion: @escaping (HTTPResult) -> Void) {
-
-        let resource = T.resourceInformation
-        let request = resource.request(for: operation, fromItem: item)
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-
-            if let error = error {
-                completion( .error(NetworkManagerError.failedRequest(cause: error)))
-                return
-            }
-
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion ( .error(NetworkManagerError.invalidResponse) )
-                return
-            }
-
-            guard 200 ... 299 ~= httpResponse.statusCode else {
-                    let status = httpResponse.statusCode
-                    completion( .error(NetworkManagerError.responseStatus(status: status)))
-                    return
-            }
-
-            guard let data = data else {
-                completion( .error(NetworkManagerError.noData))
-                return
-            }
-
-            completion( .success(data) )
-
-        }.resume()
-    }
-
 }
 
 extension RESTOperation {
@@ -140,30 +107,4 @@ extension RESTOperation {
     }
 }
 
-extension AnyRESTResource where Result == URLComponents {
 
-    fileprivate func request<T:ResourceRepresentable>(for operation: RESTOperation, fromItem item : T? = nil) -> URLRequest {
-
-        let itemIdentifier = item?.identifier
-        let json = item?.jsonRepresentation(for: operation)
-        let url = path(for: operation, withIdentifier: itemIdentifier).url!
-
-        var request = URLRequest(url: url)
-        request.httpMethod = operation.httpMethod
-
-        switch operation {
-        case .retrieve(_):
-            break
-        case .delete:
-            break
-        case .create:
-            fallthrough
-        case .update:
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try! JSONSerialization.data(withJSONObject: json!, options: .prettyPrinted)
-        }
-
-        return request
-    }
-
-}

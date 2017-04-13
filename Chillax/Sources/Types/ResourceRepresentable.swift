@@ -20,7 +20,7 @@ public protocol ResourceRepresentable {
     /// An unique identifier for the model.
     ///
     /// This would correspond to the identifier of a resource in a REST api, for example, for `GET https://test.myapi.org/someResourceName/1`, the identifier would be `1`
-    var identifier: Int { get }
+    var identifier: AnyHashable { get }
 
     /// Initializes your model from a JSON.
     ///

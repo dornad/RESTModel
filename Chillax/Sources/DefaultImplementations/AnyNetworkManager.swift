@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// A Type-erased `NetworkService`.
 public final class AnyNetworkService <U: ResourceRepresentable> : NetworkService {
 
     public typealias T = U
