@@ -1,5 +1,5 @@
 //
-//  ResourceManager.swift
+//  URLSessionNetworkService.swift
 //  RESTModel
 //
 //  Created by Daniel Rodriguez on 12/25/16.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal enum JSONResult {
+fileprivate enum JSONResult {
     case success (JSON)
     case error (Error)
 }
@@ -18,7 +18,7 @@ fileprivate enum HTTPResult {
     case error (Error)
 }
 
-public enum NetworkManagerError: Error {
+fileprivate enum NetworkManagerError: Error {
     case noURLForOperation
     case noData
     case invalidResponse
@@ -167,4 +167,3 @@ extension AnyRESTResource where Result == URLComponents {
     }
 
 }
-

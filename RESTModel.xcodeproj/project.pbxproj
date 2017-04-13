@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9F2E8AA11E109B6A00592885 /* ResourceRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2E8AA01E109B6A00592885 /* ResourceRepresentable.swift */; };
-		9F2E8AA51E109E6A00592885 /* URLSessionNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2E8AA41E109E6A00592885 /* URLSessionNetworkManager.swift */; };
-		9F579E481E27714B00952A79 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F579E471E27714B00952A79 /* NetworkManager.swift */; };
+		9F2E8AA51E109E6A00592885 /* URLSessionNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2E8AA41E109E6A00592885 /* URLSessionNetworkService.swift */; };
+		9F579E481E27714B00952A79 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F579E471E27714B00952A79 /* NetworkService.swift */; };
 		9F579E4B1E2777AF00952A79 /* AnyNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F579E4A1E2777AF00952A79 /* AnyNetworkManager.swift */; };
 		9F6338FB1E10968D00FB6D70 /* RESTModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F6338F11E10968D00FB6D70 /* RESTModel.framework */; };
 		9F6339001E10968D00FB6D70 /* RESTModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6338FF1E10968D00FB6D70 /* RESTModelTests.swift */; };
@@ -17,6 +17,8 @@
 		9FA9B04A1E9FBD58007068D8 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B0491E9FBD58007068D8 /* JSON.swift */; };
 		9FA9B04C1E9FC49B007068D8 /* RESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B04B1E9FC49B007068D8 /* RESTResource.swift */; };
 		9FA9B04E1E9FC4A6007068D8 /* AnyRESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B04D1E9FC4A6007068D8 /* AnyRESTResource.swift */; };
+		9FA9B0501E9FE4EE007068D8 /* RESTOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B04F1E9FE4EE007068D8 /* RESTOperation.swift */; };
+		9FA9B0521E9FE539007068D8 /* RESTResource+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA9B0511E9FE539007068D8 /* RESTResource+JSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,8 +33,8 @@
 
 /* Begin PBXFileReference section */
 		9F2E8AA01E109B6A00592885 /* ResourceRepresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResourceRepresentable.swift; path = Sources/Protocols/ResourceRepresentable.swift; sourceTree = "<group>"; };
-		9F2E8AA41E109E6A00592885 /* URLSessionNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLSessionNetworkManager.swift; path = Sources/URLSessionNetworkManager.swift; sourceTree = "<group>"; };
-		9F579E471E27714B00952A79 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = Sources/Protocols/NetworkManager.swift; sourceTree = "<group>"; };
+		9F2E8AA41E109E6A00592885 /* URLSessionNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLSessionNetworkService.swift; path = Sources/URLSessionNetworkService.swift; sourceTree = "<group>"; };
+		9F579E471E27714B00952A79 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkService.swift; path = Sources/Protocols/NetworkService.swift; sourceTree = "<group>"; };
 		9F579E4A1E2777AF00952A79 /* AnyNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyNetworkManager.swift; path = Sources/DefaultImplementations/AnyNetworkManager.swift; sourceTree = "<group>"; };
 		9F579E4C1E277BEB00952A79 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		9F6338F11E10968D00FB6D70 /* RESTModel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RESTModel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,6 +46,8 @@
 		9FA9B0491E9FBD58007068D8 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSON.swift; path = Sources/Protocols/JSON.swift; sourceTree = "<group>"; };
 		9FA9B04B1E9FC49B007068D8 /* RESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RESTResource.swift; path = Sources/Protocols/RESTResource.swift; sourceTree = "<group>"; };
 		9FA9B04D1E9FC4A6007068D8 /* AnyRESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyRESTResource.swift; path = Sources/DefaultImplementations/AnyRESTResource.swift; sourceTree = "<group>"; };
+		9FA9B04F1E9FE4EE007068D8 /* RESTOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RESTOperation.swift; path = Sources/Protocols/RESTOperation.swift; sourceTree = "<group>"; };
+		9FA9B0511E9FE539007068D8 /* RESTResource+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "RESTResource+JSON.swift"; path = "Sources/Protocols/RESTResource+JSON.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				9FA9B04D1E9FC4A6007068D8 /* AnyRESTResource.swift */,
-				9F2E8AA41E109E6A00592885 /* URLSessionNetworkManager.swift */,
+				9F2E8AA41E109E6A00592885 /* URLSessionNetworkService.swift */,
 				9F579E4A1E2777AF00952A79 /* AnyNetworkManager.swift */,
 			);
 			name = DefaultImplementations;
@@ -117,10 +121,12 @@
 		9F63390B1E1096AF00FB6D70 /* Types */ = {
 			isa = PBXGroup;
 			children = (
-				9FA9B04B1E9FC49B007068D8 /* RESTResource.swift */,
+				9FA9B04F1E9FE4EE007068D8 /* RESTOperation.swift */,
 				9F2E8AA01E109B6A00592885 /* ResourceRepresentable.swift */,
-				9F579E471E27714B00952A79 /* NetworkManager.swift */,
+				9F579E471E27714B00952A79 /* NetworkService.swift */,
 				9FA9B0491E9FBD58007068D8 /* JSON.swift */,
+				9FA9B04B1E9FC49B007068D8 /* RESTResource.swift */,
+				9FA9B0511E9FE539007068D8 /* RESTResource+JSON.swift */,
 			);
 			name = Types;
 			sourceTree = "<group>";
@@ -240,10 +246,12 @@
 			files = (
 				9F2E8AA11E109B6A00592885 /* ResourceRepresentable.swift in Sources */,
 				9FA9B04A1E9FBD58007068D8 /* JSON.swift in Sources */,
-				9F579E481E27714B00952A79 /* NetworkManager.swift in Sources */,
+				9F579E481E27714B00952A79 /* NetworkService.swift in Sources */,
 				9F579E4B1E2777AF00952A79 /* AnyNetworkManager.swift in Sources */,
+				9FA9B0521E9FE539007068D8 /* RESTResource+JSON.swift in Sources */,
 				9FA9B04E1E9FC4A6007068D8 /* AnyRESTResource.swift in Sources */,
-				9F2E8AA51E109E6A00592885 /* URLSessionNetworkManager.swift in Sources */,
+				9FA9B0501E9FE4EE007068D8 /* RESTOperation.swift in Sources */,
+				9F2E8AA51E109E6A00592885 /* URLSessionNetworkService.swift in Sources */,
 				9FA9B04C1E9FC49B007068D8 /* RESTResource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,5 +1,5 @@
 //
-//  NetworkManager.swift
+//  NetworkService.swift
 //  RESTModel
 //
 //  Created by Daniel Rodriguez on 1/12/17.
