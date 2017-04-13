@@ -13,14 +13,15 @@ internal enum JSONResult {
     case error (Error)
 }
 
-internal enum HTTPResult {
-    case success (code: Int)
+fileprivate enum HTTPResult {
+    case success (Data)
     case error (Error)
 }
 
 public enum NetworkManagerError: Error {
     case noURLForOperation
     case noData
+    case invalidResponse
     case responseStatus (status: Int)
     case failedRequest (cause:Error)
     case incorrectJSON
@@ -29,155 +30,57 @@ public enum NetworkManagerError: Error {
 
 public final class URLSessionNetworkService<T:ResourceRepresentable>: NetworkService {
 
-    public func delete(item: T, callback: @escaping (Result<T>) -> Void) {
+    public func perform(operation: RESTOperation, input: T, callback: @escaping (Result<T>) -> Void) {
 
-        let path = T.resourceInformation.path(for: .delete, withIdentifier: item.identifier)
+        _perform(operation: operation, input: input, callback: callback)
+    }
 
-        guard let url = path.url else {
+    public func perform(operation: RESTOperation, callback: @escaping (Result<T>) -> Void) {
 
-            callback( Result.error(NetworkManagerError.noURLForOperation) )
-            return
-        }
+        _perform(operation: operation, input: nil, callback: callback)
+    }
 
-        makeHTTPDeleteRequest(url: url) { (result) in
+    private func _perform(operation: RESTOperation, input: T?, callback: @escaping (Result<T>) -> Void) {
+
+        httpRequest(item: input, operation: operation) { (result) in
 
             switch result {
-            case .success(let httpStatusCode):
+            case .success(let data):
 
-                print("[⚠️] success!  Status code: \(httpStatusCode)")
+                guard operation != RESTOperation.delete else {
 
-                callback( Result.success(item) )
-
-            case .error(let err):
-
-                callback( Result.error(err) )
-            }
-        }
-    }
-
-    public func update(item:T, callback: @escaping (Result<T>) -> Void) {
-
-        let path = T.resourceInformation.path(for: .update, withIdentifier: item.identifier)
-
-        guard let url = path.url else {
-
-            callback( Result.error(NetworkManagerError.noURLForOperation) )
-            return
-        }
-
-        let json = item.jsonRepresentation(for: .update)
-
-        makeHTTPPutRequest(url: url, json: json) { (result) in
-
-            switch result {
-            case .success(let json):
-
-                print("[⚠️] json: \(json)")
-
-                guard let model = try? T(data: json) else {
-                    callback( Result.error(NetworkManagerError.incorrectJSON) )
+                    let output = input!
+                    callback( Result.success( [output] ) )
                     return
                 }
-                callback( Result.success(model) )
 
-            case .error(let err):
-
-                callback( Result.error(err) )
-            }
-        }
-    }
-
-    public func create(item: T, callback: @escaping (Result<T>) -> Void) {
-
-        let path = T.resourceInformation.path(for: .create)
-
-        guard let url = path.url else {
-
-            callback( Result.error(NetworkManagerError.noURLForOperation) )
-            return
-        }
-
-        let json = item.jsonRepresentation(for: .create)
-
-        makeHTTPPostRequest(url: url, json: json) { (postResult) in
-
-            switch postResult {
-            case .success(let json):
-
-                print("[⚠️] json: \(json)")
-
-                guard let model = try? T(data: json) else {
-                    callback( Result.error(NetworkManagerError.incorrectJSON) )
+                guard let json = T.resourceInformation.parse(data: data) else {
+                    callback( Result.error(NetworkManagerError.incorrectJSON))
                     return
                 }
-                callback( Result.success(model) )
 
-            case .error(let err):
+                switch json {
 
-                callback( Result.error(err) )
+                case .dictionary(let dict):
+
+                    let output = try! T(data: dict)
+                    callback( Result.success( [output] ) )
+
+                case .array(let array):
+
+                    let output = array.flatMap { (dict) -> T? in
+                        return try? T(data:dict)
+                    }
+                    callback( Result.success( output ) )
+                }
+
+            case .error(let error):
+
+                callback(Result.error(error))
             }
         }
     }
 
-    public func retrieve(identifier: Int, callback: @escaping (Result<T>)-> Void) {
-
-        let path = T.resourceInformation.path(for: .get, withIdentifier: identifier)
-
-        guard let url = path.url else {
-
-            callback( Result.error(NetworkManagerError.noURLForOperation) )
-            return
-        }
-
-        makeHTTPGetRequest(url: url) { (getResult) in
-
-            switch getResult {
-            case .success(let json):
-
-                print("[⚠️] json: \(json)")
-
-                guard let model = try? T(data: json) else {
-                    callback( Result.error(NetworkManagerError.incorrectJSON) )
-                    return
-                }
-                callback( Result.success(model) )
-
-            case .error(let err):
-
-                callback( Result.error(err) )
-            }
-        }
-    }
-
-    public func retrieve(callback: @escaping ([T], Error?) -> Void) {
-
-        let path = T.resourceInformation.path(for: .getAll)
-
-        guard let url = path.url else {
-
-            callback([], NetworkManagerError.noURLForOperation)
-            return
-        }
-
-        makeHTTPGetRequest(url: url) { (result) in
-
-            switch result {
-            case .success(let json):
-
-                guard let jsonArray = json.array else {
-                    callback([], NetworkManagerError.incorrectJSON)
-                    return
-                }
-                let models = jsonArray.flatMap { (json_) -> T? in
-                    return try? T(data: json_)
-                }
-                callback(models, nil)
-
-            case .error(let err):
-                callback([], err)
-            }
-        }
-    }
 
     public init() {
         // NO-OP
@@ -186,187 +89,82 @@ public final class URLSessionNetworkService<T:ResourceRepresentable>: NetworkSer
 
 extension URLSessionNetworkService {
 
-    fileprivate func makeHTTPDeleteRequest(
-        url: URL,
-        completion: @escaping (HTTPResult) -> Void)
-    {
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
+    fileprivate func httpRequest(item: T?, operation: RESTOperation, completion: @escaping (HTTPResult) -> Void) {
 
-        let session = URLSession.shared
+        let resource = T.resourceInformation
+        let request = resource.request(for: operation, fromItem: item)
 
-        let task = session.dataTask(with: request) { (data, response, error) in
+        URLSession.shared.dataTask(with: request) { data, response, error in
 
             if let error = error {
-                completion( .error(NetworkManagerError.failedRequest(cause: error)) )
+                completion( .error(NetworkManagerError.failedRequest(cause: error)))
                 return
             }
 
-            guard let httpResponse = response as? HTTPURLResponse,
-                200 ... 299 ~= httpResponse.statusCode else
-            {
-                let status = (response as! HTTPURLResponse).statusCode
-                completion(
-                    .error(
-                        NetworkManagerError.responseStatus(status: status)
-                    )
-                )
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion ( .error(NetworkManagerError.invalidResponse) )
                 return
             }
 
-            completion(.success(code: httpResponse.statusCode))
-        }
-
-        task.resume()
-    }
-
-    fileprivate func makeHTTPPutRequest(
-        url: URL,
-        json:JSON,
-        completion: @escaping (JSONResult) -> Void)
-    {
-        do {
-            let data = try JSONSerialization.data(
-                withJSONObject: json.object,
-                options: .prettyPrinted)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "PUT"
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = data
-
-            let session = URLSession.shared
-
-            let task = session.dataTask(with: request) { (data, response, error) in
-
-                if let error = error {
-                    completion( .error(NetworkManagerError.failedRequest(cause: error)) )
+            guard 200 ... 299 ~= httpResponse.statusCode else {
+                    let status = httpResponse.statusCode
+                    completion( .error(NetworkManagerError.responseStatus(status: status)))
                     return
-                }
-
-                guard let httpResponse = response as? HTTPURLResponse,
-                    200 ... 299 ~= httpResponse.statusCode else
-                {
-                    let status = (response as! HTTPURLResponse).statusCode
-                    completion(
-                        .error(
-                            NetworkManagerError.responseStatus(status: status)
-                        )
-                    )
-                    return
-                }
-
-                guard let data = data else {
-                    completion( .error(NetworkManagerError.noData) )
-                    return
-                }
-
-                let json = JSON(data: data)
-
-                completion(.success(json))
-            }
-
-            task.resume()
-        }
-        catch {
-            completion(
-                .error(
-                    NetworkManagerError.unknown(error)
-                )
-            )
-        }
-    }
-
-    fileprivate func makeHTTPPostRequest(url:URL, json:JSON, completion: @escaping (JSONResult) -> Void) {
-
-        do {
-            let data = try JSONSerialization.data(
-                withJSONObject: json.object,
-                options: .prettyPrinted)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = data
-
-            let session = URLSession.shared
-
-            let task = session.dataTask(with: request) { (data, response, error) in
-
-                if let error = error {
-                    completion( .error(NetworkManagerError.failedRequest(cause: error)) )
-                    return
-                }
-
-                guard let httpResponse = response as? HTTPURLResponse,
-                    200 ... 299 ~= httpResponse.statusCode else
-                {
-                    let status = (response as! HTTPURLResponse).statusCode
-                    completion(
-                        .error(
-                            NetworkManagerError.responseStatus(status: status)
-                        )
-                    )
-                    return
-                }
-
-                guard let data = data else {
-                    completion( .error(NetworkManagerError.noData) )
-                    return
-                }
-
-                let json = JSON(data: data)
-
-                completion(.success(json))
-            }
-
-            task.resume()
-        }
-        catch {
-            completion(
-                .error(
-                    NetworkManagerError.unknown(error)
-                )
-            )
-        }
-    }
-
-    fileprivate func makeHTTPGetRequest(url:URL, completion: @escaping (JSONResult) -> Void) {
-
-        let request = URLRequest(url: url)
-
-        let session = URLSession.shared
-
-        let task = session.dataTask(with: request) { (data, response, error) in
-
-            if let error = error {
-                completion( .error(NetworkManagerError.failedRequest(cause: error)) )
-                return
-            }
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                200 ... 299 ~= httpResponse.statusCode else
-            {
-                let status = (response as! HTTPURLResponse).statusCode
-                completion(
-                    .error(
-                        NetworkManagerError.responseStatus(status: status)
-                    )
-                )
-                return
             }
 
             guard let data = data else {
-                completion( .error(NetworkManagerError.noData) )
+                completion( .error(NetworkManagerError.noData))
                 return
             }
 
-            let json = JSON(data: data)
+            completion( .success(data) )
 
-            completion(.success(json))
-        }
-
-        task.resume()
+        }.resume()
     }
 
 }
+
+extension RESTOperation {
+
+    var httpMethod: String {
+        switch self {
+        case .create:
+            return "POST"
+        case .delete:
+            return "DELETE"
+        case .retrieve(_):
+            return "GET"
+        case .update:
+            return "PUT"
+        }
+    }
+}
+
+extension AnyRESTResource where Result == URLComponents {
+
+    fileprivate func request<T:ResourceRepresentable>(for operation: RESTOperation, fromItem item : T? = nil) -> URLRequest {
+
+        let itemIdentifier = item?.identifier
+        let json = item?.jsonRepresentation(for: operation)
+        let url = path(for: operation, withIdentifier: itemIdentifier).url!
+
+        var request = URLRequest(url: url)
+        request.httpMethod = operation.httpMethod
+
+        switch operation {
+        case .retrieve(_):
+            break
+        case .delete:
+            break
+        case .create:
+            fallthrough
+        case .update:
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = try! JSONSerialization.data(withJSONObject: json!, options: .prettyPrinted)
+        }
+
+        return request
+    }
+
+}
+

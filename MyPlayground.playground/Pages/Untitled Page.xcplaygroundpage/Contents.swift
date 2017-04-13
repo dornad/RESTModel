@@ -40,15 +40,20 @@ struct BookResource: RESTResource {
         switch operation {
         case .create:
             fallthrough
-        case .getAll:
-            fallthrough
         case .delete:
-            fallthrough
-        case .get:
             fallthrough
         case .update:
             if let value = identifier {
                 root_.path =  root_.path + "/\(value)"
+            }
+        case .retrieve(let fetchType):
+            switch fetchType {
+            case .single:
+                if let value = identifier {
+                    root_.path =  root_.path + "/\(value)"
+                }
+            case .many:
+                break
             }
         }
 
@@ -79,42 +84,48 @@ struct Book: ResourceRepresentable {
         isbn = isbn_
     }
 
-    init(data: JSON) throws {
-        identifier = data.dictionary?["id"] as? Int ?? 0
-        title = data.dictionary?["title"] as? String ?? ""
-        author = data.dictionary?["author"] as? String ?? ""
-        isbn = data.dictionary?["isbn"] as? String ?? ""
+    init(data: JSONDictionary) throws {
+        identifier = data["id"] as? Int ?? 0
+        title = data["title"] as? String ?? ""
+        author = data["author"] as? String ?? ""
+        isbn = data["isbn"] as? String ?? ""
     }
 
-    func jsonRepresentation(for operation: RESTOperation) -> JSON {
+    func jsonRepresentation(for operation: RESTOperation) -> JSONDictionary {
 
         let dictionary: [String: Any] = [
             "title" : title,
             "author" : author,
             "isbn" : isbn
         ]
-        return JSON(dictionary: dictionary)
+        return dictionary
     }
+
 }
 
 //:  ### C.R.U.D. Functions
-
 func retrieveAll() {
 
-    Book.service.retrieve { (books:[Book], error: Error?) in
+    let operation = RESTOperation.retrieve(RetrieveType.many)
 
-        if let err = error {
-            print("[❌] Error: \(err)")
-        }
-        else {
-            print("[✅] fetched books: \(books)")
+    Book.service.perform(operation: operation) { result in
+
+        switch result {
+        case .success (let book):
+            print("[✅] books retrieved: \(book)")
+        case .error (let error):
+            print("[❌] Error: \(error)")
         }
     }
 }
 
 func retrieve() {
 
-    Book.service.retrieve(identifier: 1) { (result) in
+    let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
+
+    let operation = RESTOperation.retrieve(RetrieveType.single)
+
+    Book.service.perform(operation: .update, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -129,7 +140,7 @@ func create() {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.service.create(item: book) { (result) in
+    Book.service.perform(operation: .create, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -144,7 +155,7 @@ func update() {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.service.update(item: book) { (result) in
+    Book.service.perform(operation: .update, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -159,7 +170,7 @@ func delete() {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.service.delete(item: book) { (result) in
+    Book.service.perform(operation: .delete, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -172,8 +183,7 @@ func delete() {
 
 //: Call the functions here
 
-delete()
-
+retrieve()
 //: This line required for network operations
 
 PlaygroundPage.current.needsIndefiniteExecution = true

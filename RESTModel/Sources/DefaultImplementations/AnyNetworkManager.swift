@@ -12,38 +12,20 @@ public final class AnyNetworkService <U: ResourceRepresentable> : NetworkService
 
     public typealias T = U
 
-    private let _delete: ((U, @escaping (Result<U>) -> Void) -> Void)
-    private let _update: ((U, @escaping (Result<U>) -> Void) -> Void)
-    private let _create: ((U, @escaping (Result<U>) -> Void) -> Void)
-    private let _retrieve: ((Int, @escaping (Result<U>) -> Void) -> Void)
-    private let _retrieveAll: ((@escaping ([U], Error?) -> Void) -> Void)
+    private let _perform: ((RESTOperation, @escaping (Result<U>) -> Void) -> Void)
+    private let _performItem: ((RESTOperation, U, @escaping (Result<U>) -> Void) -> Void)
 
     public init <Base: NetworkService>(base b: Base) where Base.T == U {
-        _delete = b.delete
-        _update = b.update
-        _create = b.create
-        _retrieve = b.retrieve
-        _retrieveAll = b.retrieve
+        _perform = b.perform
+        _performItem = b.perform
     }
 
-    public func delete(item:T, callback: @escaping (Result<T>) -> Void) {
-        _delete(item, callback)
+    public func perform(operation: RESTOperation, input: U, callback: @escaping (Result<U>) -> Void) {
+        _performItem(operation, input, callback)
     }
 
-    public func update(item:T, callback: @escaping (Result<T>) -> Void) {
-        _update(item, callback)
-    }
-
-    public func create(item: T, callback: @escaping (Result<T>) -> Void) {
-        _create(item, callback)
-    }
-
-    public func retrieve(identifier: Int, callback: @escaping (Result<T>)-> Void) {
-        _retrieve(identifier, callback)
-    }
-
-    public func retrieve(callback: @escaping ([T], Error?) -> Void) {
-        _retrieveAll(callback)
+    public func perform(operation: RESTOperation, callback: @escaping (Result<U>) -> Void) {
+        _perform(operation, callback)
     }
 }
 

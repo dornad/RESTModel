@@ -41,6 +41,13 @@ public protocol RESTResource {
     /// - Returns: The `"path"` that matches the REST Operation
     ///
     func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable?) -> Result
+
+
+    /// Parse data from the backend into a JSON Dictionary.
+    ///
+    /// - Parameter data: Data from the backend
+    /// - Returns: A `JSONValue`, either a Dictionary or Array of Dictionaries
+    func parse(data: Data) -> JSON?
 }
 
 /// The REST Operations available in the framework
@@ -53,11 +60,48 @@ public protocol RESTResource {
 /// - `DELETE` : `RESTOperation.delete`
 ///
 ///
-/// - getAll: Retrieves a group of elements.
-/// - get: Retrieves a single element
+/// - retrieve: Retrieves an element.
 /// - create: Creates an element
 /// - update: Updates an element
 /// - delete: Deletes an element
 public enum RESTOperation {
-    case getAll, get, create, update, delete
+    case retrieve (RetrieveType)
+    case create, update, delete
+}
+
+/// Type of Retrieve operations
+///
+/// - single: retrieve a single element
+/// - many: retrieve several elements
+public enum RetrieveType {
+    case single, many
+}
+
+extension RESTOperation: Equatable {}
+
+public func ==(lhs: RESTOperation, rhs: RESTOperation) -> Bool {
+
+    switch (lhs, rhs) {
+
+    case (.create, .create):
+        return true
+    case (.update, .update):
+        return true
+    case (.delete, .delete):
+        return true
+    case (.retrieve(let lhsr), .retrieve(let rhsr)):
+
+        switch (lhsr, rhsr) {
+        case (.single, .single):
+            return true
+        case (.many, .many):
+            return true
+        default:
+            return false
+        }
+
+    default:
+
+        return false
+    }
 }

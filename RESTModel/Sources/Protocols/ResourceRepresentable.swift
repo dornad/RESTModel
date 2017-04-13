@@ -26,10 +26,10 @@ public protocol ResourceRepresentable {
     ///
     /// - Parameter data: the JSON data.
     /// - Throws: an error thrown when the Model cannot be initialized from the JSON data.
-    init(data:JSON) throws
+    init(data: JSONDictionary) throws
 
     /// Provides the JSON representation of the `ResourceRepresentable` that is required in a specific REST Operation
     /// - Parameter operation: The REST operation that is being requested.
     /// - Returns: A JSON value.
-    func jsonRepresentation(for operation: RESTOperation) -> JSON
+    func jsonRepresentation(for operation: RESTOperation) -> JSONDictionary
 }
