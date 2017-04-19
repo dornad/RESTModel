@@ -3,7 +3,7 @@
 //  Chillax
 //
 //  Created by Daniel Rodriguez on 4/13/17.
-//  Copyright © 2017 REST Models. All rights reserved.
+//  Copyright © 2017 Paperless Post. All rights reserved.
 //
 
 import Foundation
