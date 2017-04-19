@@ -28,25 +28,25 @@ internal enum NetworkManagerError: Error {
     case unknown (Error)
 }
 
-public class URLSessionNetworkService<T:ResourceRepresentable>: NetworkService {
+public class URLSessionNetworkService <T:ResourceRepresentable> : NetworkService {
 
-    internal typealias RequestFunctionType = (T?, RESTOperation, @escaping (HTTPResult) -> Void) -> Void
+    internal typealias RequestFunctionType = (T?, RESTOperation, @escaping (HTTPResult) -> Void) -> NetworkServiceOperation
 
     internal var _requestFunction: (RequestFunctionType)!
 
-    public func perform(operation: RESTOperation, input: T, callback: @escaping (Result<T>) -> Void) {
+    public func perform(operation: RESTOperation, input: T, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
 
-        _perform(operation: operation, input: input, callback: callback)
+        return _perform(operation: operation, input: input, callback: callback)
     }
 
-    public func perform(operation: RESTOperation, callback: @escaping (Result<T>) -> Void) {
+    public func perform(operation: RESTOperation, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
 
-        _perform(operation: operation, input: nil, callback: callback)
+        return _perform(operation: operation, input: nil, callback: callback)
     }
 
-    private func _perform(operation: RESTOperation, input: T?, callback: @escaping (Result<T>) -> Void) {
+    private func _perform(operation: RESTOperation, input: T?, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
 
-        _requestFunction(input, operation) { result in
+        let networkServiceOperation = _requestFunction(input, operation) { result in
 
             switch result {
             case .success(let data):
@@ -83,6 +83,8 @@ public class URLSessionNetworkService<T:ResourceRepresentable>: NetworkService {
                 callback(Result.error(error))
             }
         }
+        
+        return networkServiceOperation
     }
 
 
