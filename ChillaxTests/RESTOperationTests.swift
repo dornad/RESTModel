@@ -23,6 +23,8 @@ class RESTOperationTests: XCTestCase {
             .delete
         ]
     }
+    
+    // Note: All of these Unit Tests are testing that `Equality` is implemented correctly.
 
     func testCreateEquality() {
 
