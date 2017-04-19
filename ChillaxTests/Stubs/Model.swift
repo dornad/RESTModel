@@ -29,7 +29,7 @@ struct Model: ResourceRepresentable {
 
     static var service = AnyNetworkService<Model>()
 
-    static var resourceInformation = AnyRESTResource.from( ModelResource() )
+    static var resourceInformation: RESTResource = ModelResource()
 }
 
 

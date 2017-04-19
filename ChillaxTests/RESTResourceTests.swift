@@ -65,7 +65,7 @@ class RESTResourceTests: XCTestCase {
             return jsonObject as? JSONDictionary
         }
 
-        let resource = AnyRESTResource.from( ModelResource() )
+        let resource = ModelResource()
         let model: Model? = Model(identifier: 1)
 
         // CREATE

@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension AnyRESTResource where Result == URLComponents {
+extension RESTResource {
 
     internal func request(for operation: RESTOperation) -> URLRequest? {
         return _request(for: operation)

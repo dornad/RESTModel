@@ -15,7 +15,6 @@
 		9F879AEC1E9FE831001B88FA /* RESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE61E9FE831001B88FA /* RESTResource.swift */; };
 		9F879AED1E9FE831001B88FA /* RESTResource+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AE71E9FE831001B88FA /* RESTResource+JSON.swift */; };
 		9F879AF11E9FE844001B88FA /* AnyNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AEE1E9FE844001B88FA /* AnyNetworkManager.swift */; };
-		9F879AF21E9FE844001B88FA /* AnyRESTResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AEF1E9FE844001B88FA /* AnyRESTResource.swift */; };
 		9F879AF61E9FE851001B88FA /* Chillax.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F879AF41E9FE851001B88FA /* Chillax.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9F879AF91E9FE891001B88FA /* URLSessionNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AF81E9FE891001B88FA /* URLSessionNetworkService.swift */; };
 		9F879AFF1E9FE929001B88FA /* ResourceRepresentableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F879AFB1E9FE922001B88FA /* ResourceRepresentableTests.swift */; };
@@ -49,7 +48,6 @@
 		9F879AE61E9FE831001B88FA /* RESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RESTResource.swift; path = Chillax/Sources/Types/RESTResource.swift; sourceTree = SOURCE_ROOT; };
 		9F879AE71E9FE831001B88FA /* RESTResource+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "RESTResource+JSON.swift"; path = "Chillax/Sources/Types/RESTResource+JSON.swift"; sourceTree = SOURCE_ROOT; };
 		9F879AEE1E9FE844001B88FA /* AnyNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyNetworkManager.swift; path = Chillax/Sources/DefaultImplementations/AnyNetworkManager.swift; sourceTree = SOURCE_ROOT; };
-		9F879AEF1E9FE844001B88FA /* AnyRESTResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnyRESTResource.swift; path = Chillax/Sources/DefaultImplementations/AnyRESTResource.swift; sourceTree = SOURCE_ROOT; };
 		9F879AF41E9FE851001B88FA /* Chillax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chillax.h; path = Chillax/Chillax.h; sourceTree = SOURCE_ROOT; };
 		9F879AF51E9FE851001B88FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Chillax/Info.plist; sourceTree = SOURCE_ROOT; };
 		9F879AF81E9FE891001B88FA /* URLSessionNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLSessionNetworkService.swift; path = Chillax/Sources/DefaultImplementations/URLSessionNetworkService.swift; sourceTree = SOURCE_ROOT; };
@@ -89,7 +87,6 @@
 				9F879AF81E9FE891001B88FA /* URLSessionNetworkService.swift */,
 				9F879B0D1EA14313001B88FA /* URLSessionNetworkService+DefaultImplementation.swift */,
 				9F879AEE1E9FE844001B88FA /* AnyNetworkManager.swift */,
-				9F879AEF1E9FE844001B88FA /* AnyRESTResource.swift */,
 			);
 			name = DefaultImplementations;
 			sourceTree = "<group>";
@@ -283,7 +280,6 @@
 				9F879AEB1E9FE831001B88FA /* RESTOperation.swift in Sources */,
 				9F879AF91E9FE891001B88FA /* URLSessionNetworkService.swift in Sources */,
 				9F879AE81E9FE831001B88FA /* JSON.swift in Sources */,
-				9F879AF21E9FE844001B88FA /* AnyRESTResource.swift in Sources */,
 				9F879AF11E9FE844001B88FA /* AnyNetworkManager.swift in Sources */,
 				9F879B0E1EA14313001B88FA /* URLSessionNetworkService+DefaultImplementation.swift in Sources */,
 			);

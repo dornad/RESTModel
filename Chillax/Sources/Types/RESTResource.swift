@@ -22,8 +22,6 @@ import Foundation
 /// ```
 public protocol RESTResource {
 
-    associatedtype Result
-
     /// Returns the fully qualified `"path"` that matches a REST Operation on a specific Resource.
     ///
     /// For example, given
@@ -40,7 +38,7 @@ public protocol RESTResource {
     ///   - identifier: An unique identifier for the resource.  See `identifier:Int` in `ResourceRepresentable`.
     /// - Returns: The `"path"` that matches the REST Operation
     ///
-    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable?) -> Result
+    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable?) -> URLComponents
 
 
     /// Parse data from the backend into a JSON Dictionary.
