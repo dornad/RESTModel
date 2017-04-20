@@ -76,7 +76,7 @@ class RESTResourceTests: XCTestCase {
 
         // CREATE
 
-        let createRequest = resource.request(for: .create, fromItem: model)
+        let createRequest = try? resource.request(for: .create, fromItem: model)
 
         XCTAssertEqual(createRequest?.httpMethod, "POST")
         XCTAssertEqual(createRequest?.value(forHTTPHeaderField: "Content-Type"), "application/json")
@@ -84,7 +84,7 @@ class RESTResourceTests: XCTestCase {
 
         // RETRIEVE ONE
 
-        let retrieveRequest = resource.request(for: .retrieve(.single), fromItem: model)
+        let retrieveRequest = try? resource.request(for: .retrieve(.single), fromItem: model)
 
         XCTAssertEqual(retrieveRequest?.httpMethod, "GET")
         XCTAssertNil(retrieveRequest?.value(forHTTPHeaderField: "Content-Type"))
@@ -92,7 +92,7 @@ class RESTResourceTests: XCTestCase {
 
         // RETRIEVE MANY
 
-        let retrieveManyRequest = resource.request(for: RESTOperation.retrieve(RetrieveType.many))
+        let retrieveManyRequest = try? resource.request(for: RESTOperation.retrieve(RetrieveType.many))
 
         XCTAssertEqual(retrieveManyRequest?.httpMethod, "GET")
         XCTAssertNil(retrieveManyRequest?.value(forHTTPHeaderField: "Content-Type"))
@@ -100,7 +100,7 @@ class RESTResourceTests: XCTestCase {
 
         // UPDATE
 
-        let updateRequest = resource.request(for: .update, fromItem: model)
+        let updateRequest = try? resource.request(for: .update, fromItem: model)
 
         XCTAssertEqual(updateRequest?.httpMethod, "PUT")
         XCTAssertEqual(updateRequest?.value(forHTTPHeaderField: "Content-Type"), "application/json")
@@ -108,7 +108,7 @@ class RESTResourceTests: XCTestCase {
 
         // DELETE
 
-        let deleteRequest = resource.request(for: .delete, fromItem: model)
+        let deleteRequest = try? resource.request(for: .delete, fromItem: model)
 
         XCTAssertEqual(deleteRequest?.httpMethod, "DELETE")
         XCTAssertNil(retrieveRequest?.value(forHTTPHeaderField: "Content-Type"))
@@ -117,7 +117,7 @@ class RESTResourceTests: XCTestCase {
 
         /// SPECIAL CASE
 
-        let updateRequestError = resource.request(for: .update)
+        let updateRequestError = try? resource.request(for: .update)
         XCTAssertNil(updateRequestError)
     }
 

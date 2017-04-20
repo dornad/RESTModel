@@ -13,5 +13,5 @@ struct ResourceConfiguration: Configuration {
     
     var headerFields: [String : String] = ["Content-Type": "application/json"]
     
-    var usesBackgroundSession: Bool = false
+    var backgroundSessionSupport: BackgroundSessionSupport = .notSupported
 }

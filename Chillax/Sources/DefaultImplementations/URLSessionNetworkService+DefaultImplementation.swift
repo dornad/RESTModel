@@ -26,19 +26,41 @@ extension URLSessionNetworkService {
         func cancel() { }
         func start() { }
     }
-
+    
     internal func _httpRequest(item: T?, operation: RESTOperation, completion: @escaping (HTTPResult) -> Void) -> NetworkServiceOperation {
 
+        // Retrieve the resource
+        
         let resource = T.resourceInformation
 
-        guard let request = resource.request(for: operation, fromItem: item) else {
-
-            let error = NSError(domain: "", code: 1, userInfo: nil)
+        // Ask the `Resource` to build the `URLRequest` for our operation and model ('item')
+        
+        let request: URLRequest
+        do {
+            request = try resource.request(for: operation, fromItem: item)
+        }
+        catch {
             completion( .error(NetworkManagerError.failedRequest(cause: error)) )
             return ErroredOperation()
         }
-
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        
+        // Setup the `URLSession` from the configuration information in the `Resource`
+        
+        var urlSession: URLSession
+        let configuration = resource.configuration
+        
+        if case .supported(let identifier) = configuration.backgroundSessionSupport {
+            
+            let urlSessionConfiguration = URLSessionConfiguration.background(withIdentifier: identifier)
+            urlSession = URLSession(configuration: urlSessionConfiguration, delegate: configuration.urlSessionDelegate, delegateQueue: configuration.urlSessionOperationQueue)
+        }
+        else {
+            urlSession = URLSession.shared
+        }
+        
+        // Finally, hit the network.
+        
+        let task = urlSession.dataTask(with: request) { data, response, error in
             
             if let error = error {
                 completion( .error(NetworkManagerError.failedRequest(cause: error)))
