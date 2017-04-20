@@ -4,46 +4,75 @@ import Foundation
 import PlaygroundSupport
 import Chillax
 
-let a: JSONDictionary = ["id": 1]
-let b: JSONDictionary = ["id": 2]
-let c: JSONDictionary = ["id": 3]
-
-let aP = a
-
-let arr_a = [a, b]
-let arr_b = [a, b]
-let arr_c = [a,b,c]
-
-
-print(a == b)
-print(a == aP)
-print(arr_a == arr_b)
-print(arr_a == arr_c)
-
-
-func == <K, V>(left: [K:V], right: [K:V]) -> Bool {
-    return NSDictionary(dictionary: left).isEqual(to: right)
+public protocol Configuration {
+    
+    var headerFields: [String:String] { get }
+    
+    var usesBackgroundSession: Bool { get }
 }
 
-func == <K, V>(left: [[K:V]], right: [[K:V]]) -> Bool {
+public protocol RESTResource {
+    
+    var configuration: Configuration { get set }
+    
+    var httpBodyProvider: (JSONDictionary) throws -> Data { get }
+    
+    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable?) -> URLComponents
+    
+    func parse(data: Data) -> JSON?
+}
 
-    guard left.count == right.count else { return false }
-
-    var result = false
-
-    for leftDict in left {
-
-        var foundMatch = false
-
-        right.forEach { foundMatch = (leftDict == $0) || foundMatch }
-
-        guard foundMatch else { return foundMatch }
-
-        result = foundMatch
+struct ModelResource: RESTResource {
+    
+    public struct Config: Configuration {
+       
+        var headerFields: [String:String] = ["a":"1", "b":"2", "c":"3"]
+        var usesBackgroundSession: Bool = false
     }
-
-    return result
+    
+    var configuration: Configuration = Config()
+    
+    var httpBodyProvider: (JSONDictionary) throws -> Data = { dict -> Data in
+        
+        return try JSONSerialization.data(withJSONObject: dict, options: [])
+    }
+    
+    func path(for operation: RESTOperation) -> URLComponents {
+        return path(for: operation, withIdentifier: nil)
+    }
+    
+    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable? = nil) -> URLComponents {
+        
+        var components: URLComponents = URLComponents()
+        components.scheme = "http"
+        components.port = 8080
+        components.host = "localhost"
+        components.path = "/books"
+        return components
+    }
+    
+    func parse(data: Data) -> JSON? {
+        return nil
+    }
 }
+
+
+let resource = ModelResource()
+
+
+resource.configuration.headerFields.forEach {
+    
+    print($0, $1)
+    
+}
+
+print("----")
+
+for (key,value) in resource.configuration.headerFields {
+    print(key, value)
+}
+
+
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 

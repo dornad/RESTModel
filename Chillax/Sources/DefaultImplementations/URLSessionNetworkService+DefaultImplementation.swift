@@ -10,6 +10,18 @@ import Foundation
 
 extension URLSessionNetworkService {
     
+    private struct _OperationImplementation: NetworkServiceOperation {
+        var task: URLSessionDataTask
+        
+        func start() {
+            task.resume()
+        }
+        
+        func cancel() {
+            task.cancel()
+        }
+    }
+    
     private struct ErroredOperation: NetworkServiceOperation {
         func cancel() { }
         func start() { }
@@ -49,17 +61,9 @@ extension URLSessionNetworkService {
                 return
             }
             
-            completion( .success(data) )
-            
+            completion( .success(data) )            
         }
         
-        return task
-    }
-}
-
-extension URLSessionDataTask : NetworkServiceOperation {
-    
-    public func start() {
-        self.resume()
+        return _OperationImplementation(task: task)
     }
 }

@@ -16,8 +16,13 @@ import PlaygroundSupport
 //: - `create()`
 //: - `delete()`
 
-//:  ### Book Resource
+//:  ### Configuration
+struct Config: Configuration {
+    var headerFields: [String : String] = ["Content-Type": "application/json"]
+    var usesBackgroundSession: Bool = false
+}
 
+//:  ### Book Resource
 struct BookResource: RESTResource {
 
     var root: URLComponents {
@@ -27,6 +32,12 @@ struct BookResource: RESTResource {
         components.host = "localhost"
         components.path = "/books"
         return components
+    }
+    
+    var configuration: Configuration = Config()
+    
+    var httpBodyProvider: (JSONDictionary) throws -> Data = { dict -> Data in
+        return try JSONSerialization.data(withJSONObject: dict, options: [])
     }
 
     func path(for operation: RESTOperation) -> URLComponents {
@@ -67,7 +78,7 @@ struct Book: ResourceRepresentable {
 
     static var service = AnyNetworkService<Book>()
 
-    static var resourceInformation = AnyRESTResource.from( BookResource() )
+    static var resourceInformation: RESTResource = BookResource()
 
     let identifier: AnyHashable
     let title:String
@@ -104,11 +115,11 @@ struct Book: ResourceRepresentable {
 }
 
 //:  ### C.R.U.D. Functions
-func retrieveAll() {
+func retrieveAll() -> NetworkServiceOperation {
 
     let operation = RESTOperation.retrieve(RetrieveType.many)
 
-    Book.service.perform(operation: operation) { result in
+    return Book.service.perform(operation: operation) { result in
 
         switch result {
         case .success (let book):
@@ -119,13 +130,13 @@ func retrieveAll() {
     }
 }
 
-func retrieve() {
+func retrieve() -> NetworkServiceOperation {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
     let operation = RESTOperation.retrieve(RetrieveType.single)
 
-    Book.service.perform(operation: .update, input: book) { result in
+    return Book.service.perform(operation: .update, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -136,11 +147,11 @@ func retrieve() {
     }
 }
 
-func create() {
+func create() -> NetworkServiceOperation {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.service.perform(operation: .create, input: book) { result in
+    let task = Book.service.perform(operation: .create, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -149,13 +160,15 @@ func create() {
             print("[❌] Error: \(error)")
         }
     }
+    
+    return task
 }
 
-func update() {
+func update() -> NetworkServiceOperation {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.service.perform(operation: .update, input: book) { result in
+    return Book.service.perform(operation: .update, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -166,11 +179,11 @@ func update() {
     }
 }
 
-func delete() {
+func delete() -> NetworkServiceOperation {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    Book.service.perform(operation: .delete, input: book) { result in
+    return Book.service.perform(operation: .delete, input: book) { result in
 
         switch result {
         case .success (let book):
@@ -183,7 +196,5 @@ func delete() {
 
 //: Call the functions here
 
-create()
 //: This line required for network operations
-
 PlaygroundPage.current.needsIndefiniteExecution = true

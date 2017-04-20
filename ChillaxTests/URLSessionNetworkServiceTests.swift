@@ -172,27 +172,6 @@ extension URLSessionNetworkServiceTests {
         case testSetup
     }
     
-    struct NetworkServiceOperationStub : NetworkServiceOperation {
-        
-        let _completion: (HTTPResult) -> Void
-        let _result : HTTPResult
-        
-        var didCancel: Bool = false
-        
-        mutating func cancel() {
-            didCancel = true
-        }
-        
-        func start() {
-            _completion(_result)
-        }
-        
-        init(completion: @escaping (HTTPResult) -> Void, result: HTTPResult) {
-            _completion = completion
-            _result = result
-        }
-    }
-    
     func _requestFunctionMock(item: Model?, operation: RESTOperation, completion: @escaping (HTTPResult) -> Void) -> NetworkServiceOperation {
         
         struct NetworkServiceOperationErroredStub : NetworkServiceOperation {

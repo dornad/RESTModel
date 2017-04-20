@@ -35,9 +35,19 @@ extension RESTResource {
         case .create:
             fallthrough
         case .update:
+            
             guard let json = json else { return nil }
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try! JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+            
+            print(configuration.headerFields)
+            
+            self.configuration.headerFields.forEach {
+                request.addValue($1, forHTTPHeaderField: $0)
+            }
+            
+            print(json)
+            
+            guard let httpBody = try? self.httpBodyProvider(json) else { return nil }
+            request.httpBody = httpBody
         }
 
         return request

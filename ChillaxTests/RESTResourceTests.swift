@@ -56,6 +56,12 @@ class RESTResourceTests: XCTestCase {
 
         XCTAssertNil(parsedJSON)
     }
+    
+    func testResourceIsConfigurable() {
+        
+        
+        
+    }
 
     func testURLRequestFromResource() {
 

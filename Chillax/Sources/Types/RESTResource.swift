@@ -21,6 +21,13 @@ import Foundation
 /// }
 /// ```
 public protocol RESTResource {
+    
+    /// A structure containing configuration values.  These configuration values can be global or 
+    /// local to the current `RESTResource`.
+    var configuration: Configuration { get set }
+    
+    /// A closure that provides a `Data` representataion of the HTTP body of an outgoing request.
+    var httpBodyProvider: (JSONDictionary) throws -> Data { get }
 
     /// Returns the fully qualified `"path"` that matches a REST Operation on a specific Resource.
     ///

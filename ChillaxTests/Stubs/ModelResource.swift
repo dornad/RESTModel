@@ -10,6 +10,13 @@ import Foundation
 @testable import Chillax
 
 struct ModelResource: RESTResource {
+    
+    var configuration: Configuration = ResourceConfiguration()
+    
+    var httpBodyProvider: (JSONDictionary) throws -> Data = { dict -> Data in
+        
+        return try JSONSerialization.data(withJSONObject: dict, options: [])
+    }
 
     func path(for operation: RESTOperation) -> URLComponents {
         return path(for: operation, withIdentifier: nil)
