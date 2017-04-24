@@ -28,29 +28,16 @@ public protocol RESTResource {
     
     /// A closure that provides a `Data` representataion of the HTTP body of an outgoing request.
     var httpBodyProvider: (JSONDictionary) throws -> Data { get }
-
-    /// Returns the fully qualified `"path"` that matches a REST Operation on a specific Resource.
+    
+    /// A URLComponents instance
     ///
-    /// For example, given
-    ///
-    ///     `GET https://test.myapi.org/someResourceNamePlural/1`
-    ///
-    /// the operation would be `RESTOperation.get`, the identifier would be
-    /// `1` and the fully qualified path returned by this method would be
-    ///
-    ///     `https://test.myapi.org/someResourceNamePlural/1`
-    ///
-    /// - Parameters:
-    ///   - operation: The REST operation that is being requested.
-    ///   - identifier: An unique identifier for the resource.  See `identifier:Int` in `ResourceRepresentable`.
-    /// - Returns: The `"path"` that matches the REST Operation
-    ///
-    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable?) -> URLComponents
-
+    /// Recommended that it contains values for scheme, port, host and path
+    var rootURLComponents: URLComponents { get }
 
     /// Parse data from the backend into a JSON Dictionary.
     ///
     /// - Parameter data: Data from the backend
     /// - Returns: A `JSON`, either a Dictionary or Array of Dictionaries
-    func parse(data: Data) -> JSON?
+    func parse(data: Data) -> JSON
+    
 }

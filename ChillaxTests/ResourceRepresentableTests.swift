@@ -32,7 +32,7 @@ class ResourceRepresentableTests: XCTestCase {
 
         let model = Model(identifier: 1)
 
-        let dictionary = model.jsonRepresentation(for: .create)
+        let dictionary = model.jsonRepresentation(for: CRUDOperation<Model>.create(model: model))
 
         XCTAssertEqual(dictionary.count, 1)
         XCTAssertEqual(dictionary["id"] as? AnyHashable, model.identifier)

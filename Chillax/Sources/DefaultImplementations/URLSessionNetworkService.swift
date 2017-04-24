@@ -30,38 +30,24 @@ internal enum NetworkManagerError: Error {
 
 public class URLSessionNetworkService <T:ResourceRepresentable> : NetworkService {
 
-    internal typealias RequestFunctionType = (T?, RESTOperation, @escaping (HTTPResult) -> Void) -> NetworkServiceOperation
+    internal typealias RequestFunctionType = (ChillaxOperation, @escaping (HTTPResult) -> Void) -> NetworkServiceOperation
 
     internal var _requestFunction: (RequestFunctionType)!
 
-    public func perform(operation: RESTOperation, input: T, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
+    public func perform(operation: ChillaxOperation, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
 
-        return _perform(operation: operation, input: input, callback: callback)
-    }
-
-    public func perform(operation: RESTOperation, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
-
-        return _perform(operation: operation, input: nil, callback: callback)
-    }
-
-    private func _perform(operation: RESTOperation, input: T?, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
-
-        let networkServiceOperation = _requestFunction(input, operation) { result in
+        let networkServiceOperation = _requestFunction(operation) { result in
 
             switch result {
             case .success(let data):
-
-                guard operation != RESTOperation.delete else {
-
-                    let output = input!
-                    callback( Result.success( [output] ) )
+                
+                guard operation.expectsJSONResponse else {
+                    
+                    callback( Result.success([]))
                     return
                 }
 
-                guard let json = T.resourceInformation.parse(data: data) else {
-                    callback( Result.error(NetworkManagerError.incorrectJSON))
-                    return
-                }
+                let json = T.resourceInformation.parse(data: data)
 
                 switch json {
 
@@ -76,6 +62,10 @@ public class URLSessionNetworkService <T:ResourceRepresentable> : NetworkService
                         return try? T(data:dict)
                     }
                     callback( Result.success( output ) )
+                    
+                case .notJSON(let details):
+                    
+                    callback(Result.error(details))
                 }
 
             case .error(let error):
@@ -92,21 +82,3 @@ public class URLSessionNetworkService <T:ResourceRepresentable> : NetworkService
         _requestFunction = _httpRequest
     }
 }
-
-extension RESTOperation {
-
-    var httpMethod: String {
-        switch self {
-        case .create:
-            return "POST"
-        case .delete:
-            return "DELETE"
-        case .retrieve(_):
-            return "GET"
-        case .update:
-            return "PUT"
-        }
-    }
-}
-
-

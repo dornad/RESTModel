@@ -10,6 +10,8 @@ import XCTest
 @testable import Chillax
 
 class RESTResourceTests: XCTestCase {
+    
+    typealias ModelOperation = CRUDOperation<Model>
 
     func testItConvertsJSONDictionary() {
 
@@ -18,13 +20,16 @@ class RESTResourceTests: XCTestCase {
         let jsonValue: JSONDictionary = ["id": 1]
         let json = JSON.dictionary(jsonValue)
         guard let data = testData(from: json) else { XCTFail(); return }
-        guard let parsedJSON = resource.parse(data: data) else { XCTFail(); return }
+        
+        let parsedJSON = resource.parse(data: data)
 
         switch parsedJSON {
         case .array(_):
             XCTFail("did not expect an array")
         case .dictionary(let dict):
             XCTAssertTrue(dict == jsonValue)
+        case .notJSON(let details):
+            XCTFail("Not valid JSON: \(details)")
         }
     }
 
@@ -35,13 +40,16 @@ class RESTResourceTests: XCTestCase {
         let jsonValue: [JSONDictionary] = [["id": 1], ["id": 2]]
         let json = JSON.array(jsonValue)
         guard let data = testData(from: json) else { XCTFail(); return }
-        guard let parsedJSON = resource.parse(data: data) else { XCTFail(); return }
+        
+        let parsedJSON = resource.parse(data: data)
 
         switch parsedJSON {
         case .array(let array):
             XCTAssertTrue(array == jsonValue)
         case .dictionary(_):
             XCTFail("did not expect a dictionary")
+        case .notJSON(let details):
+            XCTFail("Not valid JSON: \(details)")
         }
     }
 
@@ -54,15 +62,18 @@ class RESTResourceTests: XCTestCase {
 
         let parsedJSON = resource.parse(data: data)
 
-        XCTAssertNil(parsedJSON)
+        switch parsedJSON {
+        case .array(_):
+            XCTFail("Unexpected response")
+            
+        case .dictionary(_):
+            XCTFail("Unexpected response")
+            
+        case .notJSON(_):
+            XCTAssertTrue(true)
+        }
     }
     
-    func testResourceIsConfigurable() {
-        
-        
-        
-    }
-
     func testURLRequestFromResource() {
 
         func httpBodyJSON(request: URLRequest?) -> JSONDictionary? {
@@ -72,19 +83,19 @@ class RESTResourceTests: XCTestCase {
         }
 
         let resource = ModelResource()
-        let model: Model? = Model(identifier: 1)
+        let model = Model(identifier: 1)
 
         // CREATE
 
-        let createRequest = try? resource.request(for: .create, fromItem: model)
+        let createRequest = try? resource.request(for: ModelOperation.create(model: model))
 
         XCTAssertEqual(createRequest?.httpMethod, "POST")
         XCTAssertEqual(createRequest?.value(forHTTPHeaderField: "Content-Type"), "application/json")
-        XCTAssertEqual(httpBodyJSON(request: createRequest), model?.jsonRepresentation(for: .create))
+        XCTAssertEqual(httpBodyJSON(request: createRequest), model.jsonRepresentation(for: CRUDOperation<Model>.create(model: model)))
 
         // RETRIEVE ONE
 
-        let retrieveRequest = try? resource.request(for: .retrieve(.single), fromItem: model)
+        let retrieveRequest = try? resource.request(for: ModelOperation.retrieveBy(id: model.identifier))
 
         XCTAssertEqual(retrieveRequest?.httpMethod, "GET")
         XCTAssertNil(retrieveRequest?.value(forHTTPHeaderField: "Content-Type"))
@@ -92,7 +103,7 @@ class RESTResourceTests: XCTestCase {
 
         // RETRIEVE MANY
 
-        let retrieveManyRequest = try? resource.request(for: RESTOperation.retrieve(RetrieveType.many))
+        let retrieveManyRequest = try? resource.request(for: ModelOperation.retrieveAll)
 
         XCTAssertEqual(retrieveManyRequest?.httpMethod, "GET")
         XCTAssertNil(retrieveManyRequest?.value(forHTTPHeaderField: "Content-Type"))
@@ -100,25 +111,19 @@ class RESTResourceTests: XCTestCase {
 
         // UPDATE
 
-        let updateRequest = try? resource.request(for: .update, fromItem: model)
+        let updateRequest = try? resource.request(for: ModelOperation.update(model: model))
 
         XCTAssertEqual(updateRequest?.httpMethod, "PUT")
         XCTAssertEqual(updateRequest?.value(forHTTPHeaderField: "Content-Type"), "application/json")
-        XCTAssertEqual(httpBodyJSON(request: updateRequest), model?.jsonRepresentation(for: .update))
+        XCTAssertEqual(httpBodyJSON(request: updateRequest), model.jsonRepresentation(for: CRUDOperation<Model>.update(model: model)))
 
         // DELETE
 
-        let deleteRequest = try? resource.request(for: .delete, fromItem: model)
+        let deleteRequest = try? resource.request(for: ModelOperation.delete(model: model))
 
         XCTAssertEqual(deleteRequest?.httpMethod, "DELETE")
         XCTAssertNil(retrieveRequest?.value(forHTTPHeaderField: "Content-Type"))
         XCTAssertNil(retrieveRequest?.httpBody)
-
-
-        /// SPECIAL CASE
-
-        let updateRequestError = try? resource.request(for: .update)
-        XCTAssertNil(updateRequestError)
     }
 
 }
@@ -131,6 +136,8 @@ extension RESTResourceTests {
             return try? JSONSerialization.data(withJSONObject: jsonArray, options: [])
         case .dictionary(let dict):
             return try? JSONSerialization.data(withJSONObject: dict, options: [])
+        case .notJSON(_):
+            return nil
         }
     }
 }

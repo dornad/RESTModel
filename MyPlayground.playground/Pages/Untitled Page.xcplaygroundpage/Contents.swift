@@ -25,9 +25,11 @@ struct Config: Configuration {
 }
 
 //:  ### Book Resource
+typealias BookOperation = CRUDOperation<Book>
+
 struct BookResource: RESTResource {
 
-    var root: URLComponents {
+    var rootURLComponents: URLComponents {
         var components: URLComponents = URLComponents()
         components.scheme = "http"
         components.port = 8080
@@ -40,37 +42,6 @@ struct BookResource: RESTResource {
     
     var httpBodyProvider: (JSONDictionary) throws -> Data = { dict -> Data in
         return try JSONSerialization.data(withJSONObject: dict, options: [])
-    }
-
-    func path(for operation: RESTOperation) -> URLComponents {
-        return path(for: operation, withIdentifier: nil)
-    }
-
-    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable? = nil) -> URLComponents {
-
-        var root_ = root
-
-        switch operation {
-        case .create:
-            break
-        case .delete:
-            fallthrough
-        case .update:
-            if let value = identifier {
-                root_.path =  root_.path + "/\(value)"
-            }
-        case .retrieve(let fetchType):
-            switch fetchType {
-            case .single:
-                if let value = identifier {
-                    root_.path =  root_.path + "/\(value)"
-                }
-            case .many:
-                break
-            }
-        }
-
-        return root_
     }
 }
 
@@ -104,7 +75,7 @@ struct Book: ResourceRepresentable {
         isbn = data["isbn"] as? String ?? ""
     }
 
-    func jsonRepresentation(for operation: RESTOperation) -> JSONDictionary {
+    func jsonRepresentation(for operation: ChillaxOperation) -> JSONDictionary {
 
         let dictionary: [String: Any] = [
             "title" : title,
@@ -119,9 +90,13 @@ struct Book: ResourceRepresentable {
 //:  ### C.R.U.D. Functions
 func retrieveAll() -> NetworkServiceOperation {
 
-    let operation = RESTOperation.retrieve(RetrieveType.many)
+    let operation = BookOperation.retrieveAll
+    
+    print("\(#function) ENTER")
 
     return Book.service.perform(operation: operation) { result in
+        
+        print("\(#function)")
 
         switch result {
         case .success (let book):
@@ -134,11 +109,9 @@ func retrieveAll() -> NetworkServiceOperation {
 
 func retrieve() -> NetworkServiceOperation {
 
-    let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
+    let operation = BookOperation.retrieveBy(id: 1)
 
-    let operation = RESTOperation.retrieve(RetrieveType.single)
-
-    return Book.service.perform(operation: .update, input: book) { result in
+    return Book.service.perform(operation: operation) { result in
 
         switch result {
         case .success (let book):
@@ -153,7 +126,9 @@ func create() -> NetworkServiceOperation {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    let task = Book.service.perform(operation: .create, input: book) { result in
+    let operation = BookOperation.create(model: book)
+    
+    return Book.service.perform(operation: operation) { result in
 
         switch result {
         case .success (let book):
@@ -162,15 +137,15 @@ func create() -> NetworkServiceOperation {
             print("[❌] Error: \(error)")
         }
     }
-    
-    return task
 }
 
 func update() -> NetworkServiceOperation {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
-
-    return Book.service.perform(operation: .update, input: book) { result in
+    
+    let operation = BookOperation.update(model: book)
+    
+    return Book.service.perform(operation: operation) { result in
 
         switch result {
         case .success (let book):
@@ -185,10 +160,12 @@ func delete() -> NetworkServiceOperation {
 
     let book = Book(id: 1, title: "The impossible Foo", author: "Baz", isbn: "abcd1234")
 
-    return Book.service.perform(operation: .delete, input: book) { result in
+    let operation = BookOperation.delete(model: book)
+    
+    return Book.service.perform(operation: operation) { result in
 
         switch result {
-        case .success (let book):
+        case .success (_):
             print("[✅] book deleted: \(book)")
         case .error (let error):
             print("[❌] Error: \(error)")

@@ -11,8 +11,9 @@ import Foundation
 /// A typealias for `[String:Any]`
 public typealias JSONDictionary = [String: Any]
 
-/// A enumeration used for JSON results:  Dictionaries or Arrays.
+/// A enumeration used for JSON results:  Dictionaries, Arrays or not JSON.
 public enum JSON {
     case dictionary (JSONDictionary)
     case array ([JSONDictionary])
+    case notJSON (details: Error)
 }

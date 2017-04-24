@@ -11,34 +11,28 @@ import XCTest
 
 class AnyNetworkServiceTests: XCTestCase {
     
+    typealias ModelOperation = CRUDOperation<Model>
+    
     func testItWorksAsExpected() {
         
         class NetworkServiceStub: NetworkService {
             
             var didCallPerform = false
-            var didCallPerformWithInput = false
             
-            func perform(operation: RESTOperation, input: Model, callback: @escaping (Result<Model>) -> Void) -> NetworkServiceOperation {
-                didCallPerformWithInput = true
-                return NetworkServiceOperationStub()
-            }
-            
-            func perform(operation: RESTOperation, callback: @escaping (Result<Model>) -> Void) -> NetworkServiceOperation {
+            func perform(operation: ChillaxOperation, callback: @escaping (Result<Model>) -> Void) -> NetworkServiceOperation {
                 didCallPerform = true
                 return NetworkServiceOperationStub()
             }
         }
         
-        let model = Model(identifier: 1)
         let service = NetworkServiceStub()
         let anyServiceWrapper = AnyNetworkService<Model>(base: service)
         
-        let _ = anyServiceWrapper.perform(operation: .retrieve(.many)) { result in }
-        
-        let _ = anyServiceWrapper.perform(operation: .create, input: model) { result in }
+        let _ = anyServiceWrapper.perform(operation: ModelOperation.retrieveAll) { result in
+            // no-op 
+        }
         
         XCTAssertTrue(service.didCallPerform)
-        XCTAssertTrue(service.didCallPerformWithInput)
     }
     
     func testInitializesDefaultValuesCorrectly() {

@@ -10,26 +10,40 @@ import Foundation
 
 // MARK: `RESTResource` default implementation of `parse(data:)`
 
+private enum JSONParseError: Error {
+    case notDictionaryOrArray
+}
+
 extension RESTResource {
+    
 
     /// Parse data from the backend into a JSON Dictionary.
     ///
     /// - Parameter data: Data from the backend
     /// - Returns: A `JSON`, either a Dictionary or Array of Dictionaries
-    public func parse(data: Data) -> JSON? {
+    public func parse(data: Data) -> JSON {
 
-        let json = try? JSONSerialization.jsonObject(with: data, options: [])
-
-        if json is [JSONDictionary] {
-
-            return JSON.array( (json as! [JSONDictionary]) )
+        do {
+            
+            let json = try JSONSerialization.jsonObject(with: data, options: [])
+            
+            if json is [JSONDictionary] {
+                
+                return JSON.array( (json as! [JSONDictionary]) )
+            }
+            else if json is JSONDictionary {
+                
+                return JSON.dictionary( json as! JSONDictionary )
+            }
+            else {
+                
+                return JSON.notJSON(details: JSONParseError.notDictionaryOrArray)
+            }
         }
-        else if json is JSONDictionary {
-
-            return JSON.dictionary( json as! JSONDictionary )
+        catch {
+            
+            return JSON.notJSON(details: error)
         }
-
-        return nil
     }
 
 }

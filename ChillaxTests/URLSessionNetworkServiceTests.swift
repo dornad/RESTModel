@@ -13,6 +13,8 @@ class URLSessionNetworkServiceTests: XCTestCase {
     
     var service: URLSessionNetworkService<Model>!
     
+    typealias ModelOperation = CRUDOperation<Model>
+    
     override func setUp() {
         
         super.setUp()
@@ -28,7 +30,7 @@ class URLSessionNetworkServiceTests: XCTestCase {
         
         let model = Model(identifier: 1)
         
-        let networkServiceOperation = service.perform(operation: .create, input: model) { result in
+        let networkServiceOperation = service.perform(operation: ModelOperation.create(model: model)) { result in
             
             switch result {
                 
@@ -51,9 +53,7 @@ class URLSessionNetworkServiceTests: XCTestCase {
         
         let retrieveOneExp = expectation(description: "retrieve operation in networking service")
         
-        let model = Model(identifier: 1)
-        
-        let networkServiceOperation = service.perform(operation: .retrieve(.single), input: model) { result in
+        let networkServiceOperation = service.perform(operation: ModelOperation.retrieveBy(id: 1)) { result in
             
             switch result {
                 
@@ -76,7 +76,7 @@ class URLSessionNetworkServiceTests: XCTestCase {
         
         let retrieveAllExp = expectation(description: "retrieve all operation in networking service")
         
-        let networkServiceOperation = service.perform(operation: .retrieve(.many)) { result in
+        let networkServiceOperation = service.perform(operation: ModelOperation.retrieveAll) { result in
             
             switch result {
                 
@@ -101,7 +101,7 @@ class URLSessionNetworkServiceTests: XCTestCase {
         
         let model = Model(identifier: 1)
         
-        let networkServiceOperation = service.perform(operation: .update, input: model) { result in
+        let networkServiceOperation = service.perform(operation: ModelOperation.update(model: model)) { result in
             
             switch result {
                 
@@ -126,7 +126,7 @@ class URLSessionNetworkServiceTests: XCTestCase {
         
         let model = Model(identifier: 1)
         
-        let networkServiceOperation = service.perform(operation: .delete, input: model) { result in
+        let networkServiceOperation = service.perform(operation: ModelOperation.delete(model: model)) { result in
             
             switch result {
                 
@@ -149,7 +149,7 @@ class URLSessionNetworkServiceTests: XCTestCase {
         
         let model = Model(identifier: 1)
         
-        let op = service.perform(operation: .delete, input: model) { result in
+        let op = service.perform(operation: ModelOperation.delete(model: model)) { result in
             // NO-OP
         }
         
@@ -169,86 +169,67 @@ extension URLSessionNetworkServiceTests {
     
     private enum TestError: Error {
         
-        case testSetup
+        case notCRUDOperation
+        case mockHttpBodyNil
     }
     
-    func _requestFunctionMock(item: Model?, operation: RESTOperation, completion: @escaping (HTTPResult) -> Void) -> NetworkServiceOperation {
+    func _requestFunctionMock(operation: ChillaxOperation, completion: @escaping (HTTPResult) -> Void) -> NetworkServiceOperation {
         
         struct NetworkServiceOperationErroredStub : NetworkServiceOperation {
-            
-            func cancel() {
-                // no-op
-            }
-            
-            func start() {
-                // no-op
-            }
-            
+            func cancel() { } // NO-OP
+            func start() { } // NO-OP
             static let instance = NetworkServiceOperationErroredStub()
         }
         
-        switch operation {
+        guard operation is ModelOperation else {
             
-        case .create:
+            completion( .error(TestError.notCRUDOperation) )
+            return NetworkServiceOperationErroredStub.instance
+        }
+        
+        let crudOperation = operation as! ModelOperation
+        
+        switch crudOperation {
             
-            guard let json = item?.jsonRepresentation(for: operation) else {
-                completion( .error(TestError.testSetup) )
+        case .create(let model):
+            let json = model.jsonRepresentation(for: crudOperation)
+            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
+                completion( .error(TestError.mockHttpBodyNil) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            guard let d = data(from: json) else {
-                completion( .error(TestError.testSetup))
-                return NetworkServiceOperationErroredStub.instance
-            }
-            
             return NetworkServiceOperationStub(completion: completion, result: .success(d))
-            
-        case .retrieve( let retrieveType ):
-            
-            switch retrieveType {
-                
-            case .single:
-                let json = ["id": 1]
-                guard let d = data(from: json) else {
-                    completion( .error(TestError.testSetup))
-                    return NetworkServiceOperationErroredStub.instance
-                }
-                return NetworkServiceOperationStub(completion: completion, result: .success(d))
-                
-            case .many:
-                let json = [["id": 1], ["id": 2]]
-                guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
-                    completion( .error(TestError.testSetup))
-                    return NetworkServiceOperationErroredStub.instance
-                }
-                return NetworkServiceOperationStub(completion: completion, result: .success(d))
-            }
-            
-        case .update:
-            guard let json = item?.jsonRepresentation(for: operation) else {
-                completion( .error(TestError.testSetup) )
+        
+        case .update(let model):
+            let json = model.jsonRepresentation(for: crudOperation)
+            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
+                completion( .error(TestError.mockHttpBodyNil) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            guard let d = data(from: json) else {
-                completion( .error(TestError.testSetup))
+            return NetworkServiceOperationStub(completion: completion, result: .success(d))
+        
+        case .delete(let model):
+            let json = model.jsonRepresentation(for: crudOperation)
+            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
+                completion( .error(TestError.mockHttpBodyNil) )
                 return NetworkServiceOperationErroredStub.instance
             }
             return NetworkServiceOperationStub(completion: completion, result: .success(d))
             
-        case .delete:
-            guard let json = item?.jsonRepresentation(for: operation) else {
-                completion( .error(TestError.testSetup) )
+        case .retrieveBy(let id):
+            let json: JSONDictionary = ["id" : "\(id)"]
+            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
+                completion( .error(TestError.mockHttpBodyNil) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            guard let d = data(from: json) else {
-                completion( .error(TestError.testSetup))
+            return NetworkServiceOperationStub(completion: completion, result: .success(d))
+        
+        case .retrieveAll:
+            let json: [JSONDictionary] = [["id" : "1"], ["id" : "2"]]
+            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
+                completion( .error(TestError.mockHttpBodyNil) )
                 return NetworkServiceOperationErroredStub.instance
             }
             return NetworkServiceOperationStub(completion: completion, result: .success(d))
         }
     }
-    
-    private func data(from json:JSONDictionary) -> Data? {
-        return try? JSONSerialization.data(withJSONObject: json, options: [])
-    }
-    
 }

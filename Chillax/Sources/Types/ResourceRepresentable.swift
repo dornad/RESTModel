@@ -31,5 +31,5 @@ public protocol ResourceRepresentable {
     /// Provides the JSON representation of the `ResourceRepresentable` that is required in a specific REST Operation
     /// - Parameter operation: The REST operation that is being requested.
     /// - Returns: A JSON value.
-    func jsonRepresentation(for operation: RESTOperation) -> JSONDictionary
+    func jsonRepresentation(for operation: ChillaxOperation) -> JSONDictionary
 }

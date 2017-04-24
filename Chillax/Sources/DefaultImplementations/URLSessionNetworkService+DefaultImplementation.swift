@@ -27,7 +27,7 @@ extension URLSessionNetworkService {
         func start() { }
     }
     
-    internal func _httpRequest(item: T?, operation: RESTOperation, completion: @escaping (HTTPResult) -> Void) -> NetworkServiceOperation {
+    internal func _httpRequest(operation: ChillaxOperation, completion: @escaping (HTTPResult) -> Void) -> NetworkServiceOperation {
 
         // Retrieve the resource
         
@@ -37,7 +37,8 @@ extension URLSessionNetworkService {
         
         let request: URLRequest
         do {
-            request = try resource.request(for: operation, fromItem: item)
+            
+            request = try resource.request(for: operation)
         }
         catch {
             completion( .error(NetworkManagerError.failedRequest(cause: error)) )

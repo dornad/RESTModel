@@ -40,12 +40,5 @@ public protocol NetworkService {
     ///   - operation: create, retrieve, update or delete
     ///   - input: the input element
     ///   - callback: callback result
-    func perform(operation: RESTOperation, input: T, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation
-
-    /// Perform a network operation on an element's type.  i.e.: retrieve all elements.
-    ///
-    /// - Parameters:
-    ///   - operation: create, retrieve, update or delete
-    ///   - callback: callback result
-    func perform(operation: RESTOperation, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation
+    func perform(operation: ChillaxOperation, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation
 }

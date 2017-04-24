@@ -17,13 +17,9 @@ struct ModelResource: RESTResource {
         
         return try JSONSerialization.data(withJSONObject: dict, options: [])
     }
-
-    func path(for operation: RESTOperation) -> URLComponents {
-        return path(for: operation, withIdentifier: nil)
-    }
-
-    func path(for operation: RESTOperation, withIdentifier identifier: AnyHashable? = nil) -> URLComponents {
-
+    
+    var rootURLComponents: URLComponents {
+        
         var components: URLComponents = URLComponents()
         components.scheme = "http"
         components.port = 8080
