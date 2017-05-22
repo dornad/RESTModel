@@ -13,6 +13,9 @@ import Foundation
 /// several Models.
 public protocol Configuration {
     
+    /// Allows adopters to provide their URLSession
+    var sessionProvider: () -> URLSession { get }
+    
     /// the header fields that should be configured in the URLRequest.
     var headerFields: [String:String] { get }
     
@@ -38,6 +41,22 @@ extension Configuration {
     
     public var urlSessionOperationQueue: OperationQueue? {
         return nil
+    }
+    
+    public var sessionProvider: () -> URLSession {
+        
+        return { () -> URLSession in
+            
+            if case .supported(let identifier) = self.backgroundSessionSupport {
+                let urlSessionConfiguration = URLSessionConfiguration.background(withIdentifier: identifier)
+                return URLSession(configuration: urlSessionConfiguration,
+                                  delegate: self.urlSessionDelegate,
+                                  delegateQueue: self.urlSessionOperationQueue)
+            }
+            else {
+                return URLSession.shared
+            }
+        }
     }
 }
 

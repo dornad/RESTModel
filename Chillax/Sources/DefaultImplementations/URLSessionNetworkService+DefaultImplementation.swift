@@ -45,19 +45,9 @@ extension URLSessionNetworkService {
             return ErroredOperation()
         }
         
-        // Setup the `URLSession` from the configuration information in the `Resource`
+        // Retrieve the `URLSession` from the configuration information in the `Resource`
         
-        var urlSession: URLSession
-        let configuration = resource.configuration
-        
-        if case .supported(let identifier) = configuration.backgroundSessionSupport {
-            
-            let urlSessionConfiguration = URLSessionConfiguration.background(withIdentifier: identifier)
-            urlSession = URLSession(configuration: urlSessionConfiguration, delegate: configuration.urlSessionDelegate, delegateQueue: configuration.urlSessionOperationQueue)
-        }
-        else {
-            urlSession = URLSession.shared
-        }
+        let urlSession = resource.configuration.sessionProvider()
         
         // Finally, hit the network.
         

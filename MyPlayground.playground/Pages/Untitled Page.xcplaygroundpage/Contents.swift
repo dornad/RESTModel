@@ -174,6 +174,7 @@ func delete() -> NetworkServiceOperation {
 }
 
 //: Call the functions here
-// put code here...
+// Add sample code here; next line is there as an example 
+// retrieveAll().start()
 //: This line required for network operations
 PlaygroundPage.current.needsIndefiniteExecution = true
