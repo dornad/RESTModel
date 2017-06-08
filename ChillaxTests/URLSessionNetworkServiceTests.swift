@@ -171,6 +171,7 @@ extension URLSessionNetworkServiceTests {
         
         case notCRUDOperation
         case mockHttpBodyNil
+        case invalidValue
     }
     
     func _requestFunctionMock(operation: ChillaxOperation, completion: @escaping (HTTPResult) -> Void) -> NetworkServiceOperation {
@@ -182,7 +183,6 @@ extension URLSessionNetworkServiceTests {
         }
         
         guard operation is ModelOperation else {
-            
             completion( .error(TestError.notCRUDOperation) )
             return NetworkServiceOperationErroredStub.instance
         }
@@ -192,44 +192,55 @@ extension URLSessionNetworkServiceTests {
         switch crudOperation {
             
         case .create(let model):
-            let json = model.jsonRepresentation(for: crudOperation)
-            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
-                completion( .error(TestError.mockHttpBodyNil) )
+            do {
+                let data = try model.jsonRepresentation(for: crudOperation)
+                return NetworkServiceOperationStub(completion: completion, result: .success(data))
+            } catch {
+                completion( .error(error) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            return NetworkServiceOperationStub(completion: completion, result: .success(d))
-        
+            
         case .update(let model):
-            let json = model.jsonRepresentation(for: crudOperation)
-            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
-                completion( .error(TestError.mockHttpBodyNil) )
+            do {
+                let data = try model.jsonRepresentation(for: crudOperation)
+                return NetworkServiceOperationStub(completion: completion, result: .success(data))
+            } catch {
+                completion( .error(error) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            return NetworkServiceOperationStub(completion: completion, result: .success(d))
         
         case .delete(let model):
-            let json = model.jsonRepresentation(for: crudOperation)
-            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
-                completion( .error(TestError.mockHttpBodyNil) )
+            do {
+                let data = try model.jsonRepresentation(for: crudOperation)
+                return NetworkServiceOperationStub(completion: completion, result: .success(data))
+            } catch {
+                completion( .error(error) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            return NetworkServiceOperationStub(completion: completion, result: .success(d))
             
         case .retrieveBy(let id):
-            let json: JSONDictionary = ["id" : "\(id)"]
-            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
-                completion( .error(TestError.mockHttpBodyNil) )
+            do {
+                guard let identifier = id as? Int else {
+                    completion( .error(TestError.invalidValue) )
+                    return NetworkServiceOperationErroredStub.instance
+                }
+                let json: [String: Any] = ["id": identifier]
+                let data = try JSONSerialization.data(withJSONObject: json, options: [])
+                return NetworkServiceOperationStub(completion: completion, result: .success(data))
+            } catch {
+                completion( .error(error) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            return NetworkServiceOperationStub(completion: completion, result: .success(d))
         
         case .retrieveAll:
-            let json: [JSONDictionary] = [["id" : "1"], ["id" : "2"]]
-            guard let d = try? JSONSerialization.data(withJSONObject: json, options: []) else {
-                completion( .error(TestError.mockHttpBodyNil) )
+            do {
+                let json: [[String: Any]] = [["id" : 1], ["id" : 2]]
+                let data = try JSONSerialization.data(withJSONObject: json, options: [])
+                return NetworkServiceOperationStub(completion: completion, result: .success(data))
+            } catch {
+                completion( .error(error) )
                 return NetworkServiceOperationErroredStub.instance
             }
-            return NetworkServiceOperationStub(completion: completion, result: .success(d))
         }
     }
 }

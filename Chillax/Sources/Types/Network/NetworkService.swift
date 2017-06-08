@@ -18,7 +18,7 @@ public enum Result<T: ResourceRepresentable> {
     case error (Error)
 }
 
-///
+/// A protocol for a Swift.Operation type.
 public protocol NetworkServiceOperation {
     
     /// Start the operation

@@ -9,7 +9,7 @@
 import Foundation
 
 /// A Type-erased `NetworkService`.
-public final class AnyNetworkService <U: ResourceRepresentable> : NetworkService {
+public final class AnyNetworkService <U: Resource> : NetworkService {
 
     private let _perform: (ChillaxOperation, @escaping (Result<U>) -> Void) -> NetworkServiceOperation    
 

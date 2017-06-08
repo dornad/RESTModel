@@ -9,7 +9,7 @@
 import Foundation
 
 internal enum JSONResult {
-    case success (JSON)
+    case success (Data)
     case error (Error)
 }
 
@@ -28,7 +28,7 @@ internal enum NetworkManagerError: Error {
     case unknown (Error)
 }
 
-public class URLSessionNetworkService <T:ResourceRepresentable> : NetworkService {
+public class URLSessionNetworkService <T:Resource> : NetworkService {
 
     internal typealias RequestFunctionType = (ChillaxOperation, @escaping (HTTPResult) -> Void) -> NetworkServiceOperation
 
@@ -37,46 +37,42 @@ public class URLSessionNetworkService <T:ResourceRepresentable> : NetworkService
     public func perform(operation: ChillaxOperation, callback: @escaping (Result<T>) -> Void) -> NetworkServiceOperation {
 
         let networkServiceOperation = _requestFunction(operation) { result in
-
+            
             switch result {
-            case .success(let data):
+            
+            case .error(let error):
+                callback(Result.error(error))
                 
+            case .success(let data):
                 guard operation.expectsJSONResponse else {
-                    
-                    callback( Result.success([]))
+                    callback( Result.success([]) )
                     return
                 }
-
-                let json = T.resourceInformation.parse(data: data)
-
-                switch json {
-
-                case .dictionary(let dict):
-
-                    let output = try! T(data: dict)
-                    callback( Result.success( [output] ) )
-
-                case .array(let array):
-
-                    let output = array.flatMap { (dict) -> T? in
-                        return try? T(data:dict)
-                    }
-                    callback( Result.success( output ) )
-                    
-                case .notJSON(let details):
-                    
-                    callback(Result.error(details))
+                
+                let jsonDecoder = JSONDecoder()
+                do {
+                    let element = try jsonDecoder.decode(T.self, from: data)
+                    callback( Result.success([element]))
                 }
-
-            case .error(let error):
-
-                callback(Result.error(error))
+                catch {
+                    self._attemptArrayDecoding(decoder: jsonDecoder, data: data, callback: callback)
+                }
             }
         }
         
         return networkServiceOperation
     }
 
+    
+    private func _attemptArrayDecoding(decoder: JSONDecoder, data: Data, callback: @escaping (Result<T>) -> Void) {
+        do {
+            let array = try decoder.decode([T].self, from: data)
+            callback( Result.success(array))
+        }
+        catch {
+            callback( Result.error(error) )
+        }
+    }
 
     public init() {
         _requestFunction = _httpRequest

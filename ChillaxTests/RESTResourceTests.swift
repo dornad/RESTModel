@@ -13,73 +13,17 @@ class RESTResourceTests: XCTestCase {
     
     typealias ModelOperation = CRUDOperation<Model>
 
-    func testItConvertsJSONDictionary() {
-
-        let resource = ModelResource()
-
-        let jsonValue: JSONDictionary = ["id": 1]
-        let json = JSON.dictionary(jsonValue)
-        guard let data = testData(from: json) else { XCTFail(); return }
-        
-        let parsedJSON = resource.parse(data: data)
-
-        switch parsedJSON {
-        case .array(_):
-            XCTFail("did not expect an array")
-        case .dictionary(let dict):
-            XCTAssertTrue(dict == jsonValue)
-        case .notJSON(let details):
-            XCTFail("Not valid JSON: \(details)")
-        }
-    }
-
-    func testItConvertsJSONArray() {
-
-        let resource = ModelResource()
-
-        let jsonValue: [JSONDictionary] = [["id": 1], ["id": 2]]
-        let json = JSON.array(jsonValue)
-        guard let data = testData(from: json) else { XCTFail(); return }
-        
-        let parsedJSON = resource.parse(data: data)
-
-        switch parsedJSON {
-        case .array(let array):
-            XCTAssertTrue(array == jsonValue)
-        case .dictionary(_):
-            XCTFail("did not expect a dictionary")
-        case .notJSON(let details):
-            XCTFail("Not valid JSON: \(details)")
-        }
-    }
-
-    func testItHandlesNonJSONCorrectly() {
-
-        let notJSON = "Hello World"
-        let data = notJSON.data(using: .utf8)!
-
-        let resource = ModelResource()
-
-        let parsedJSON = resource.parse(data: data)
-
-        switch parsedJSON {
-        case .array(_):
-            XCTFail("Unexpected response")
-            
-        case .dictionary(_):
-            XCTFail("Unexpected response")
-            
-        case .notJSON(_):
-            XCTAssertTrue(true)
-        }
-    }
-    
     func testURLRequestFromResource() {
 
-        func httpBodyJSON(request: URLRequest?) -> JSONDictionary? {
+        func httpBodyJSON(request: URLRequest?) -> [String: Any]? {
             guard let httpBody = request?.httpBody else { return nil }
             let jsonObject = try? JSONSerialization.jsonObject(with: httpBody, options: [])
-            return jsonObject as? JSONDictionary
+            return jsonObject as? [String: Any]
+        }
+        
+        func json(from data: Data) -> [String: Any]? {
+            guard let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) else { return nil }
+            return (jsonObject as? [String: Any])
         }
 
         let resource = ModelResource()
@@ -88,10 +32,12 @@ class RESTResourceTests: XCTestCase {
         // CREATE
 
         let createRequest = try? resource.request(for: ModelOperation.create(model: model))
+        let jsonModelDataCreate = try! model.jsonRepresentation(for: CRUDOperation<Model>.create(model: model))
+        let jsonModelCreate = json(from: jsonModelDataCreate)
 
         XCTAssertEqual(createRequest?.httpMethod, "POST")
         XCTAssertEqual(createRequest?.value(forHTTPHeaderField: "Content-Type"), "application/json")
-        XCTAssertEqual(httpBodyJSON(request: createRequest), model.jsonRepresentation(for: CRUDOperation<Model>.create(model: model)))
+        XCTAssertEqual(httpBodyJSON(request: createRequest), jsonModelCreate)
 
         // RETRIEVE ONE
 
@@ -112,10 +58,12 @@ class RESTResourceTests: XCTestCase {
         // UPDATE
 
         let updateRequest = try? resource.request(for: ModelOperation.update(model: model))
+        let jsonModelData = try! model.jsonRepresentation(for: CRUDOperation<Model>.update(model: model))
+        let jsonModel = json(from: jsonModelData)
 
         XCTAssertEqual(updateRequest?.httpMethod, "PUT")
         XCTAssertEqual(updateRequest?.value(forHTTPHeaderField: "Content-Type"), "application/json")
-        XCTAssertEqual(httpBodyJSON(request: updateRequest), model.jsonRepresentation(for: CRUDOperation<Model>.update(model: model)))
+        XCTAssertEqual(httpBodyJSON(request: updateRequest), jsonModel)
 
         // DELETE
 
@@ -128,19 +76,6 @@ class RESTResourceTests: XCTestCase {
 
 }
 
-extension RESTResourceTests {
-
-    fileprivate func testData(from json:JSON) -> Data? {
-        switch json {
-        case .array(let jsonArray):
-            return try? JSONSerialization.data(withJSONObject: jsonArray, options: [])
-        case .dictionary(let dict):
-            return try? JSONSerialization.data(withJSONObject: dict, options: [])
-        case .notJSON(_):
-            return nil
-        }
-    }
-}
 
 extension Dictionary: Equatable  {
 

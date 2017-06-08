@@ -9,37 +9,45 @@
 import Foundation
 @testable import Chillax
 
-struct Model: ResourceRepresentable {
-
-    enum ModelError : Error {
-        case invalidJSON
-    }
-
-    /// Provides the JSON representation of the `ResourceRepresentable` that is required in a specific REST Operation
-    /// - Parameter operation: The REST operation that is being requested.
-    /// - Returns: A JSON value.
-    func jsonRepresentation(for operation: ChillaxOperation) -> JSONDictionary {
-        return ["id" : identifier]
-    }
-
-    /// An unique identifier for the model.
-    ///
-    /// This would correspond to the identifier of a resource in a REST api, for example, for `GET https://test.myapi.org/someResourceName/1`, the identifier would be `1`
+struct Model: Codable, ResourceRepresentable {
+    
+    static var resourceInformation: ResourceRepresentableConfiguration = ModelResource()
+    
     var identifier: AnyHashable
-
-    static var service = AnyNetworkService<Model>()
-
-    static var resourceInformation: RESTResource = ModelResource()
+    
+    func jsonRepresentation(for operation: ChillaxOperation) throws -> Data {
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(self)
+        return data
+    }
+    
 }
 
-
+// MARK: - Codable Implementation
 
 extension Model {
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: Model.CodingKeys.self)
+        guard let intValue = identifier as? Int else {
+            throw CodingError.identifierNotInteger
+        }
+        try container.encode(intValue, forKey: .identifier)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Model.CodingKeys.self)
+        let identifier = try container.decode(Int.self, forKey: .identifier)
+        self.init(identifier: identifier)
+    }
+}
 
-    init(data dictionary: JSONDictionary) throws {
-
-        guard let id = dictionary["id"] as? AnyHashable else { throw ModelError.invalidJSON }
-
-        self.identifier = id
+extension Model {
+    enum CodingKeys: String, CodingKey {
+        case identifier = "id"
+    }
+    
+    enum CodingError: Error {
+        case identifierNotInteger
     }
 }

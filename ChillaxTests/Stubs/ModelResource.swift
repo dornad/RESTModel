@@ -9,17 +9,11 @@
 import Foundation
 @testable import Chillax
 
-struct ModelResource: RESTResource {
+struct ModelResource: ResourceRepresentableConfiguration {
     
     var configuration: Configuration = ResourceConfiguration()
     
-    var httpBodyProvider: (JSONDictionary) throws -> Data = { dict -> Data in
-        
-        return try JSONSerialization.data(withJSONObject: dict, options: [])
-    }
-    
     var rootURLComponents: URLComponents {
-        
         var components: URLComponents = URLComponents()
         components.scheme = "http"
         components.port = 8080

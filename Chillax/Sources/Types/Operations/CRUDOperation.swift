@@ -24,7 +24,7 @@ import Foundation
 /// - update: Update a model
 /// - delete: Delete a model
 ///
-public enum CRUDOperation <T: ResourceRepresentable>: ChillaxOperation {
+public enum CRUDOperation <T: Resource>: ChillaxOperation {
     
     case create(model: T)
     case retrieveBy(id: AnyHashable)
@@ -97,15 +97,15 @@ extension CRUDOperation {
         
         switch self {
         case .create(let model):
-            let dict = model.jsonRepresentation(for: self)
-            return try? JSONSerialization.data(withJSONObject: dict, options: [])
+            let encoder = JSONEncoder()
+            return try? encoder.encode(model)
         case .retrieveBy(id: _):
             return nil
         case .retrieveAll:
             return nil
         case .update(let model):
-            let dict = model.jsonRepresentation(for: self)
-            return try? JSONSerialization.data(withJSONObject: dict, options: [])
+            let encoder = JSONEncoder()
+            return try? encoder.encode(model)
         case .delete(model: _):
             return nil
         }

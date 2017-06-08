@@ -10,8 +10,6 @@ import XCTest
 
 class ConfigurationTests: XCTestCase {
     
-    
-    
     func testDefaultURLSessionPropertiesAreNil() {
         
         /// test that default URLSession properties default to nil
