@@ -16,7 +16,7 @@ struct Model: Codable, ResourceRepresentable {
     var identifier: AnyHashable
     
     func jsonRepresentation(for operation: ChillaxOperation) throws -> Data {
-        let encoder = JSONEncoder()
+        let encoder = operation.encoder
         let data = try encoder.encode(self)
         return data
     }

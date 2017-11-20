@@ -49,7 +49,7 @@ public class URLSessionNetworkService <T:Resource> : NetworkService {
                     return
                 }
                 
-                let jsonDecoder = JSONDecoder()
+                let jsonDecoder = operation.decoder
                 do {
                     let element = try jsonDecoder.decode(T.self, from: data)
                     callback( Result.success([element]))

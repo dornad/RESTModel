@@ -97,15 +97,15 @@ extension CRUDOperation {
         
         switch self {
         case .create(let model):
-            let encoder = JSONEncoder()
-            return try? encoder.encode(model)
+            let jsonEncoder = self.encoder
+            return try? jsonEncoder.encode(model)
         case .retrieveBy(id: _):
             return nil
         case .retrieveAll:
             return nil
         case .update(let model):
-            let encoder = JSONEncoder()
-            return try? encoder.encode(model)
+            let jsonEncoder = self.encoder
+            return try? jsonEncoder.encode(model)
         case .delete(model: _):
             return nil
         }

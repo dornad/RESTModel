@@ -19,6 +19,22 @@ public protocol ChillaxOperation {
     var httpBody: Data? { get }
     
     var expectsJSONResponse: Bool { get }
+    
+    var encoder: JSONEncoder { get }
+    
+    var decoder: JSONDecoder { get }
+}
+
+extension ChillaxOperation {
+    
+    public var encoder: JSONEncoder {
+        return JSONEncoder()
+    }
+    
+    public var decoder: JSONDecoder {
+        return JSONDecoder()
+    }
+    
 }
 
 
