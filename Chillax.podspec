@@ -16,7 +16,7 @@
   #
 
   s.name         = "Chillax"
-  s.version      = "1.2.0"
+  s.version      = "1.2.1"
   s.summary      = "Because iOS networking should be relaxing."
   s.license      = { :type => 'Private', :text => <<-LICENSE
     Copyright 2016, 2017 - PaperlessPost
